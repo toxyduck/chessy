@@ -3,6 +3,14 @@ import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 
 class Chessy {
+
+    private val drawer = JFrameMoveDrawer(1080, 1920, 60)
+    private val videoMaker = FFmpegVideoMaker(1080, 1920, 60)
+
+    init {
+        drawer.addFrameListener(videoMaker::addFrame)
+    }
+
     fun fromPgn(pgnString: String) {
         val pgn = PgnHolder("")
         pgn.loadPgn(pgnString)
@@ -30,6 +38,17 @@ class Chessy {
                 initialState,
                 domainMoves
             )
+            videoMaker.startRecord()
+            var currentBoard = initialState
+            domainMoves.forEach {
+                drawer.drawMove(currentBoard, it)
+                currentBoard = currentBoard.mutate(it)
+            }
+            if (domainMoves.isNotEmpty()) {
+                val firstMove = domainMoves.first()
+                drawer.drawMove(initialState, firstMove)
+            }
+            videoMaker.endRecord()
         }
     }
 }

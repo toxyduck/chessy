@@ -16,10 +16,4 @@ fun main() {
             }
         }
     httpAsync.join()
-    val testBoard = JFrameMoveDrawer(1080, 1920).drawBoardWithPieces()
-    ImageIO.write(testBoard, "PNG", File("/tmp", "combined.png"))
-//    val mp4SavePath = "/tmp/img.mp4"
-//    val width = 1920
-//    val height = 1080
-//    createMp4(mp4SavePath, width, height)
 }
