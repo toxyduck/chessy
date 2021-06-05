@@ -1,5 +1,7 @@
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
+import java.io.File
+import javax.imageio.ImageIO
 
 fun main() {
     val httpAsync = "https://lichess.org/game/export/ji0P8SHM"
@@ -14,6 +16,8 @@ fun main() {
             }
         }
     httpAsync.join()
+    val testBoard = JFrameMoveDrawer(1080, 1920).drawCleanBoard()
+    ImageIO.write(testBoard, "PNG", File("/tmp", "combined.png"))
     val mp4SavePath = "/tmp/img.mp4"
     val width = 1920
     val height = 1080
