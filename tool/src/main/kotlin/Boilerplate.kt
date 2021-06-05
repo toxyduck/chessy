@@ -1,16 +1,16 @@
 
-val whitePawn = Figure(FigureName.Pawn, Side.White)
-val blackPawn = Figure(FigureName.Pawn, Side.Black)
-val whiteKnight = Figure(FigureName.Knight, Side.White)
-val blackKnight = Figure(FigureName.Knight, Side.Black)
-val whiteBishop = Figure(FigureName.Bishop, Side.White)
-val blackBishop = Figure(FigureName.Bishop, Side.Black)
-val whiteRock = Figure(FigureName.Rock, Side.White)
-val blackRock = Figure(FigureName.Rock, Side.Black)
-val whiteQueen = Figure(FigureName.Queen, Side.White)
-val blackQueen = Figure(FigureName.Queen, Side.Black)
-val whiteKing = Figure(FigureName.King, Side.White)
-val blackKing = Figure(FigureName.King, Side.Black)
+val whitePawn = Piece(PieceName.Pawn, Side.White)
+val blackPawn = Piece(PieceName.Pawn, Side.Black)
+val whiteKnight = Piece(PieceName.Knight, Side.White)
+val blackKnight = Piece(PieceName.Knight, Side.Black)
+val whiteBishop = Piece(PieceName.Bishop, Side.White)
+val blackBishop = Piece(PieceName.Bishop, Side.Black)
+val whiteRock = Piece(PieceName.Rock, Side.White)
+val blackRock = Piece(PieceName.Rock, Side.Black)
+val whiteQueen = Piece(PieceName.Queen, Side.White)
+val blackQueen = Piece(PieceName.Queen, Side.Black)
+val whiteKing = Piece(PieceName.King, Side.White)
+val blackKing = Piece(PieceName.King, Side.Black)
 
 private val realInitialBoardFigures = listOf(
     blackRock, blackKnight, blackBishop, blackQueen, blackKing, blackBishop, blackKnight, blackRock,
@@ -30,7 +30,7 @@ private val realCells = (0 until 64).map { ix ->
 }
 
 val realBoard = Board(
-    realInitialBoardFigures.zip(realCells) { figure: Figure?, cell ->
-        CellWithFigure(cell, figure)
+    realInitialBoardFigures.zip(realCells) { piece: Piece?, cell ->
+        CellWithPiece(cell, piece)
     }
 )

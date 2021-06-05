@@ -1,4 +1,4 @@
-enum class FigureName {
+enum class PieceName {
     Pawn,
     Knight,
     Bishop,
@@ -11,7 +11,7 @@ enum class Side {
     Black, White
 }
 
-data class Figure(val figureName: FigureName, val side: Side)
+data class Piece(val pieceName: PieceName, val side: Side)
 
 data class Cell(val x: Int, val y: Int) {
     fun isBlack(): Boolean {
@@ -41,9 +41,9 @@ data class Cell(val x: Int, val y: Int) {
     }
 }
 
-data class CellWithFigure(val cell: Cell, val figure: Figure?)
+data class CellWithPiece(val cell: Cell, val piece: Piece?)
 
-data class Board(val cells: List<CellWithFigure>)
+data class Board(val cells: List<CellWithPiece>)
 
 data class Move(val from: Cell, val to: Cell)
 
