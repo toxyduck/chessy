@@ -4,7 +4,16 @@ import org.bytedeco.javacv.FFmpegFrameRecorder
 import org.bytedeco.javacv.Java2DFrameConverter
 import java.awt.image.BufferedImage
 import java.io.File
+import java.io.InputStream
 import javax.imageio.ImageIO
+
+interface VideoMaker {
+    fun startRecord()
+
+    fun addFrame(bufferedImage: BufferedImage)
+
+    fun endRecord(): InputStream
+}
 
 fun createMp4(videoSavePath: String, width: Int, height: Int) {
     val recorder = FFmpegFrameRecorder(videoSavePath, width, height)
