@@ -14,4 +14,8 @@ fun main() {
             }
         }
     httpAsync.join()
+    val mp4SavePath = "/tmp/img.mp4"
+    val width = 1920
+    val height = 1080
+    createMp4(mp4SavePath, width, height)
 }
