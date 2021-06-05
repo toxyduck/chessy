@@ -1,0 +1,3 @@
+rootProject.name = 'chessy'
+include 'tool'
+
