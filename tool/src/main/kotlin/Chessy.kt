@@ -26,10 +26,10 @@ class Chessy {
             val whitePlayer = game.whitePlayer.name
             val where = game.round.event.name
             val initialState = realBoard
-            val domainMoves = moves.map {
-                val from = Cell.fromNotation(it.from.value()) ?: throw Exception()
-                val to = Cell.fromNotation(it.to.value()) ?: throw Exception()
-                Move(from, to)
+            val domainMoves = moves.mapIndexed { ix, move ->
+                val from = Cell.fromNotation(move.from.value()) ?: throw Exception()
+                val to = Cell.fromNotation(move.to.value()) ?: throw Exception()
+                Move(from, to, board.backup[ix].isCastleMove)
             }
             val domainGame = Game(
                 whitePlayer,
@@ -38,16 +38,22 @@ class Chessy {
                 initialState,
                 domainMoves
             )
-
             videoMaker.startRecord()
             var currentBoard = initialState
-            domainMoves.forEach {
-                drawer.drawMove(currentBoard, it)
-                currentBoard = currentBoard.mutate(it)
+            domainMoves.forEach { move ->
+                if (move.isCastleMove) {
+                    move.rockCastleMove()?.let { rockMove ->
+                        drawer.drawCastle(currentBoard, move, rockMove)
+                    }
+                } else {
+                    drawer.drawMove(currentBoard, move)
+                }
+                currentBoard = currentBoard.mutate(move)
             }
-//            if (domainMoves.isNotEmpty()) {
-//                val firstMove = domainMoves.first()
-//                drawer.drawMove(initialState, firstMove)
+//            var currentBoard = initialState
+//            domainMoves.subList(0, 10).forEach {
+//                drawer.drawMove(currentBoard, it)
+//                currentBoard = currentBoard.mutate(it)
 //            }
             videoMaker.endRecord()
         }

@@ -11,6 +11,8 @@ interface MoveDrawer {
     fun drawCheckMate(board: Board)
 
     fun drawBoard(board: Board)
+
+    fun drawCastle(board: Board, kingMove: Move, rockMove: Move)
 }
 
 class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : MoveDrawer {
@@ -30,12 +32,23 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
     }
 
     override fun drawMove(board: Board, move: Move) {
+        drawMoves(board, listOf(move))
+    }
+
+    override fun drawCastle(board: Board, kingMove: Move, rockMove: Move) {
+        drawMoves(board, listOf(kingMove, rockMove))
+    }
+
+    private fun drawMoves(board: Board, moves: List<Move>) {
         if (frameListener == null) return
-        var movedPiece: Piece? = null
+        val movedPieces = mutableListOf<Pair<Piece, Move>>()
         val boardWithoutMovedPiece = board.copy(
             cells = board.cells.map { cellWithPiece ->
-                if (cellWithPiece.cell == move.from) {
-                    movedPiece = cellWithPiece.piece
+                val move: Move? = moves.find { cellWithPiece.cell == it.from }
+                if (move != null) {
+                    cellWithPiece.piece?.let {
+                        movedPieces.add(it to move)
+                    }
                     cellWithPiece.copy(piece = null)
                 } else {
                     cellWithPiece
@@ -43,32 +56,24 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
             }
         )
         val image = drawBoardWithPieces(boardWithoutMovedPiece)
-        val movedPieceFinal = movedPiece
-        if (movedPieceFinal != null) {
-            val pieceIcon = movedPieceFinal.icon()
-            val frameCount = MOVE_DURATION / frameDuration
-            val leftTopFromX = move.from.x * cellSize + topLeftBoardX
-            val leftTopFromY = (7-move.from.y) * cellSize + topLeftBoardY
-            val leftTopToX = move.to.x * cellSize + topLeftBoardX
-            val leftTopToY = (7-move.to.y) * cellSize + topLeftBoardY
-            val dx = (leftTopToX - leftTopFromX)/frameCount
-            val dy = (leftTopToY - leftTopFromY)/frameCount
-            for (ix in 0..frameCount) {
-                val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
-                val g = frame.graphics
-                g.drawImage(image, 0, 0, null)
+        val frameCount = MOVE_DURATION / frameDuration
+        println("Rendered move ${moves.joinToString()}}")
+        for (ix in 0..frameCount) {
+            val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
+            val g = frame.graphics
+            g.drawImage(image, 0, 0, null)
+            movedPieces.forEach { (movedPiece, move) ->
+                val pieceIcon = movedPiece.icon()
+                val leftTopFromX = move.from.x * cellSize + topLeftBoardX
+                val leftTopFromY = (7-move.from.y) * cellSize + topLeftBoardY
+                val leftTopToX = move.to.x * cellSize + topLeftBoardX
+                val leftTopToY = (7-move.to.y) * cellSize + topLeftBoardY
+                val dx = (leftTopToX - leftTopFromX)/frameCount
+                val dy = (leftTopToY - leftTopFromY)/frameCount
                 g.drawImage(pieceIcon, leftTopFromX + dx*ix , leftTopFromY + dy*ix, cellSize, cellSize, null)
-                println("Rendered move from = ${move.from} to = ${move.to}")
-                frameListener?.invoke(frame)
             }
+            frameListener?.invoke(frame)
         }
-    }
-
-    override fun drawCheckMate(board: Board) {
-        TODO("Not yet implemented")
-    }
-
-    override fun drawBoard(board: Board) {
     }
 
     private fun drawBoardWithPieces(boardCurrent: Board): BufferedImage {
@@ -137,6 +142,10 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         }
         return board
     }
+
+    override fun drawCheckMate(board: Board) {}
+
+    override fun drawBoard(board: Board) {}
 
     companion object {
         private const val MOVE_DURATION = 500

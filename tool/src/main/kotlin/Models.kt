@@ -49,17 +49,36 @@ data class CellWithPiece(val cell: Cell, val piece: Piece?)
 data class Board(val cells: List<CellWithPiece>) {
     fun mutate(move: Move): Board {
         val piece = cells.find { it.cell == move.from }?.piece
-        return this.copy(cells = this.cells.map {
+        val mutated = this.copy(cells = this.cells.map {
             when (it.cell) {
                 move.from -> it.copy(piece = null)
                 move.to -> it.copy(piece = piece)
                 else -> it
             }
         })
+        return if (move.isCastleMove) move.rockCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
     }
 }
 
-data class Move(val from: Cell, val to: Cell)
+data class Move(val from: Cell, val to: Cell, val isCastleMove: Boolean) {
+
+    fun rockCastleMove(): Move? {
+        if (!isCastleMove) return null
+        return if (from.y == 7) {
+            if (to.x >= 4) {
+                Move(Cell(7, 7), Cell(5, 7), false)
+            } else {
+                Move(Cell(0, 7), Cell(3, 7), false)
+            }
+        } else {
+            if (to.x >= 4) {
+                Move(Cell(7, 0), Cell(5, 0), false)
+            } else {
+                Move(Cell(0, 0), Cell(3, 0), false)
+            }
+        }
+    }
+}
 
 data class Game(
     val whitePlayer: String,
