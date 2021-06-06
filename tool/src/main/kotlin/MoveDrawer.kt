@@ -54,13 +54,11 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
             val dx = (leftTopToX - leftTopFromX)/frameCount
             val dy = (leftTopToY - leftTopFromY)/frameCount
             for (ix in 0..frameCount) {
-                val frame = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+                val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
                 val g = frame.graphics
                 g.drawImage(image, 0, 0, null)
                 g.drawImage(pieceIcon, leftTopFromX + dx*ix , leftTopFromY + dy*ix, cellSize, cellSize, null)
-
-                print("Rendered move from = ${move.from} to = ${move.to}")
-
+                println("Rendered move from = ${move.from} to = ${move.to}")
                 frameListener?.invoke(frame)
             }
         }
@@ -74,7 +72,7 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
     }
 
     private fun drawBoardWithPieces(boardCurrent: Board): BufferedImage {
-        val boardWithPieces = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+        val boardWithPieces = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
         val g = boardWithPieces.graphics
         g.drawImage(cleanBoard, 0, 0, null)
         boardCurrent.cells.forEach {
@@ -128,11 +126,13 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
     }
 
    private fun drawCleanBoard(): BufferedImage {
-        val board = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+        val board = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
         val g = board.graphics
+        g.color = backgroundColor
+        g.fillRect(0, 0, width, height)
         realBoard.cells.forEach {
             val y = 7 - it.cell.y
-            g.color = if (it.cell.isBlack()) Color.BLUE else Color.LIGHT_GRAY
+            g.color = if (it.cell.isBlack()) blackColor else whiteColor
             g.fillRect(topLeftBoardX + cellSize * it.cell.x, topLeftBoardY + cellSize * y, cellSize, cellSize)
         }
         return board
@@ -140,5 +140,8 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
 
     companion object {
         private const val MOVE_DURATION = 500
+        private val blackColor = Color.decode("#A57550")
+        private val whiteColor = Color.decode("#EBD0A6")
+        private val backgroundColor = Color.decode("#E9E6E3")
     }
 }

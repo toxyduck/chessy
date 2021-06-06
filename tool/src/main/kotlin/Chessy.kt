@@ -38,16 +38,17 @@ class Chessy {
                 initialState,
                 domainMoves
             )
+
             videoMaker.startRecord()
             var currentBoard = initialState
             domainMoves.forEach {
                 drawer.drawMove(currentBoard, it)
                 currentBoard = currentBoard.mutate(it)
             }
-            if (domainMoves.isNotEmpty()) {
-                val firstMove = domainMoves.first()
-                drawer.drawMove(initialState, firstMove)
-            }
+//            if (domainMoves.isNotEmpty()) {
+//                val firstMove = domainMoves.first()
+//                drawer.drawMove(initialState, firstMove)
+//            }
             videoMaker.endRecord()
         }
     }
