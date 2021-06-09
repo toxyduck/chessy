@@ -133,8 +133,7 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
     }
 
     private fun Piece.pathToImage(): URL {
-        val a = MoveDrawer::class.java
-        return MoveDrawer::class.java.getResource("${name()}${side()}.png")!!
+        return MoveDrawer::class.java.getResource("/${name()}${side()}.png")!!
     }
 
     private fun Piece.side(): String {

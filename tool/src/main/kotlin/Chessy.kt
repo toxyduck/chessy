@@ -1,6 +1,5 @@
 package io.chessy.tool
 
-import java.lang.Exception
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 
@@ -21,7 +20,7 @@ class Chessy {
             game.loadMoveText()
             val moves = game.halfMoves
             val board = Board()
-            val mateMoves = mutableListOf<Pair<Boolean,Boolean>>()
+            val mateMoves = mutableListOf<Pair<Boolean, Boolean>>()
             for (move in moves) {
                 board.doMove(move)
                 mateMoves.add(Pair(board.isMated, board.isKingAttacked))
@@ -53,8 +52,8 @@ class Chessy {
 
 //**************************Prod*************************************
             domainMoves.forEach { move ->
-            drawMove(move, currentBoard)
-            currentBoard = currentBoard.mutate(move)
+                drawMove(move, currentBoard)
+                currentBoard = currentBoard.mutate(move)
             }
 //**************************Test*************************************
 //            domainMoves.subList(0, 10).forEach {
@@ -66,8 +65,8 @@ class Chessy {
         }
     }
 
-    private fun drawMove(move: Move, currentBoard: io.chessy.tool.Board){
-        when{
+    private fun drawMove(move: Move, currentBoard: io.chessy.tool.Board) {
+        when {
             move.isCastleMove -> {
                 move.rookCastleMove()?.let { rookMove ->
                     drawer.drawCastle(currentBoard, move, rookMove)
@@ -83,7 +82,9 @@ class Chessy {
                     drawer.drawCastle(currentBoard, move, rookMove)
                 }
             }
-            else ->  { drawer.drawMove(currentBoard, move) }
+            else -> {
+                drawer.drawMove(currentBoard, move)
+            }
 
 
         }
