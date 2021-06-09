@@ -1,4 +1,5 @@
-import java.lang.Exception
+package io.chessy.tool
+
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 
@@ -19,8 +20,10 @@ class Chessy {
             game.loadMoveText()
             val moves = game.halfMoves
             val board = Board()
+            val mateMoves = mutableListOf<Pair<Boolean, Boolean>>()
             for (move in moves) {
                 board.doMove(move)
+                mateMoves.add(Pair(board.isMated, board.isKingAttacked))
             }
             val blackPlayer = game.blackPlayer.name
             val whitePlayer = game.whitePlayer.name
@@ -29,7 +32,13 @@ class Chessy {
             val domainMoves = moves.mapIndexed { ix, move ->
                 val from = Cell.fromNotation(move.from.value()) ?: throw Exception()
                 val to = Cell.fromNotation(move.to.value()) ?: throw Exception()
-                Move(from, to, board.backup[ix].isCastleMove)
+                Move(
+                    from,
+                    to,
+                    board.backup[ix].isCastleMove,
+                    mateMoves[ix].first,
+                    mateMoves[ix].second
+                )
             }
             val domainGame = Game(
                 whitePlayer,
@@ -40,22 +49,40 @@ class Chessy {
             )
             videoMaker.startRecord()
             var currentBoard = initialState
+
+//**************************Prod*************************************
             domainMoves.forEach { move ->
-                if (move.isCastleMove) {
-                    move.rockCastleMove()?.let { rockMove ->
-                        drawer.drawCastle(currentBoard, move, rockMove)
-                    }
-                } else {
-                    drawer.drawMove(currentBoard, move)
-                }
+                drawMove(move, currentBoard)
                 currentBoard = currentBoard.mutate(move)
             }
-//            var currentBoard = initialState
+//**************************Test*************************************
 //            domainMoves.subList(0, 10).forEach {
-//                drawer.drawMove(currentBoard, it)
+//                drawMove(it, currentBoard)
 //                currentBoard = currentBoard.mutate(it)
 //            }
+//********************************************************************
             videoMaker.endRecord()
+        }
+    }
+
+    private fun drawMove(move: Move, currentBoard: io.chessy.tool.Board) {
+        when {
+            move.isCastleMove -> {
+                move.rookCastleMove()?.let { rookMove ->
+                    drawer.drawCastle(currentBoard, move, rookMove)
+                }
+            }
+//            move.isMateMove -> {
+//                move.rookCastleMove()?.let { rookMove ->
+//                    drawer.drawCastle(currentBoard, move, rookMove)
+//                }
+//            }
+            move.isKingAttacked -> {
+                drawer.drawKingAttacked(currentBoard, move)
+            }
+            else -> {
+                drawer.drawMove(currentBoard, move)
+            }
         }
     }
 }

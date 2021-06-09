@@ -1,7 +1,8 @@
+package io.chessy
+
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
-import java.io.File
-import javax.imageio.ImageIO
+import io.chessy.tool.Chessy
 
 fun main() {
     val httpAsync = "https://lichess.org/game/export/ji0P8SHM"

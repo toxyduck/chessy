@@ -1,14 +1,23 @@
+package io.chessy.tool
+
 enum class PieceName {
     Pawn,
     Knight,
     Bishop,
-    Rock,
+    Rook,
     Queen,
     King
 }
 
 enum class Side {
     Black, White
+}
+
+fun Side.opposite(): Side {
+    return when (this) {
+        Side.Black -> Side.White
+        Side.White -> Side.Black
+    }
 }
 
 data class Piece(val pieceName: PieceName, val side: Side)
@@ -56,13 +65,19 @@ data class Board(val cells: List<CellWithPiece>) {
                 else -> it
             }
         })
-        return if (move.isCastleMove) move.rockCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
+        return if (move.isCastleMove) move.rookCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
     }
 }
 
-data class Move(val from: Cell, val to: Cell, val isCastleMove: Boolean) {
+data class Move(
+    val from: Cell,
+    val to: Cell,
+    val isCastleMove: Boolean,
+    val isMateMove: Boolean = false,
+    val isKingAttacked: Boolean = false
+) {
 
-    fun rockCastleMove(): Move? {
+    fun rookCastleMove(): Move? {
         if (!isCastleMove) return null
         return if (from.y == 7) {
             if (to.x >= 4) {

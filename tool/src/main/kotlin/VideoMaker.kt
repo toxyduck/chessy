@@ -1,3 +1,5 @@
+package io.chessy.tool
+
 import org.bytedeco.ffmpeg.global.avcodec
 import org.bytedeco.ffmpeg.global.avutil
 import org.bytedeco.javacv.FFmpegFrameRecorder
@@ -14,8 +16,8 @@ interface VideoMaker {
     fun endRecord(): InputStream
 }
 
-class FFmpegVideoMaker(width: Int, height: Int, fps: Int) : VideoMaker{
-    private val recorder =  FFmpegFrameRecorder("/tmp/out.mp4", width, height)
+class FFmpegVideoMaker(width: Int, height: Int, fps: Int) : VideoMaker {
+    private val recorder = FFmpegFrameRecorder("/tmp/out.mp4", width, height)
     private val converter = Java2DFrameConverter()
 
     init {
