@@ -39,23 +39,26 @@ class Chessy {
                 domainMoves
             )
             videoMaker.startRecord()
-            var currentBoard = initialState
-            domainMoves.forEach { move ->
-                if (move.isCastleMove) {
-                    move.rockCastleMove()?.let { rockMove ->
-                        drawer.drawCastle(currentBoard, move, rockMove)
-                    }
-                } else {
-                    drawer.drawMove(currentBoard, move)
-                }
-                currentBoard = currentBoard.mutate(move)
-            }
+//          Prod
 //            var currentBoard = initialState
-//            domainMoves.subList(0, 10).forEach {
-//                drawer.drawMove(currentBoard, it)
-//                currentBoard = currentBoard.mutate(it)
+//            domainMoves.forEach { move ->
+//                if (move.isCastleMove) {
+//                    move.rookCastleMove()?.let { rookMove ->
+//                        drawer.drawCastle(currentBoard, move, rookMove)
+//                    }
+//                } else {
+//                    drawer.drawMove(currentBoard, move)
+//                }
+//                currentBoard = currentBoard.mutate(move)
 //            }
+//**************************Test*************************************
+            var currentBoard = initialState
+            domainMoves.subList(0, 10).forEach {
+                drawer.drawMove(currentBoard, it)
+                currentBoard = currentBoard.mutate(it)
+            }
             videoMaker.endRecord()
+//********************************************************************
         }
     }
 }

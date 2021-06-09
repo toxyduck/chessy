@@ -12,7 +12,7 @@ interface MoveDrawer {
 
     fun drawBoard(board: Board)
 
-    fun drawCastle(board: Board, kingMove: Move, rockMove: Move)
+    fun drawCastle(board: Board, kingMove: Move, rookMove: Move)
 }
 
 class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : MoveDrawer {
@@ -35,8 +35,8 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         drawMoves(board, listOf(move))
     }
 
-    override fun drawCastle(board: Board, kingMove: Move, rockMove: Move) {
-        drawMoves(board, listOf(kingMove, rockMove))
+    override fun drawCastle(board: Board, kingMove: Move, rookMove: Move) {
+        drawMoves(board, listOf(kingMove, rookMove))
     }
 
     private fun drawMoves(board: Board, moves: List<Move>) {
@@ -124,7 +124,7 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
             PieceName.Pawn -> "Pawn"
             PieceName.Knight -> "Knight"
             PieceName.Bishop -> "Bishop"
-            PieceName.Rock -> "Rock"
+            PieceName.Rook -> "Rook"
             PieceName.Queen -> "Queen"
             PieceName.King -> "King"
         }

@@ -2,7 +2,7 @@ enum class PieceName {
     Pawn,
     Knight,
     Bishop,
-    Rock,
+    Rook,
     Queen,
     King
 }
@@ -56,13 +56,13 @@ data class Board(val cells: List<CellWithPiece>) {
                 else -> it
             }
         })
-        return if (move.isCastleMove) move.rockCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
+        return if (move.isCastleMove) move.rookCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
     }
 }
 
 data class Move(val from: Cell, val to: Cell, val isCastleMove: Boolean) {
 
-    fun rockCastleMove(): Move? {
+    fun rookCastleMove(): Move? {
         if (!isCastleMove) return null
         return if (from.y == 7) {
             if (to.x >= 4) {
