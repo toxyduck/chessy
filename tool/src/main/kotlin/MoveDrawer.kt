@@ -15,6 +15,8 @@ interface MoveDrawer {
     fun drawBoard(board: Board)
 
     fun drawCastle(board: Board, kingMove: Move, rookMove: Move)
+
+    fun drawKingAttacked(board: Board, move: Move)
 }
 
 class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : MoveDrawer {
@@ -41,11 +43,19 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         drawMoves(board, listOf(kingMove, rookMove))
     }
 
-    private fun drawMoves(board: Board, moves: List<Move>) {
+    override fun drawKingAttacked(board: Board, move: Move) {
+        drawMoves(board, listOf(move), true)
+    }
+
+    private fun drawMoves(board: Board, moves: List<Move>, isKingAttacked: Boolean = false) {
         if (frameListener == null) return
         val movedPieces = mutableListOf<Pair<Piece, Move>>()
+        var kingSide: Side? = null
         val boardWithoutMovedPiece = board.copy(
             cells = board.cells.map { cellWithPiece ->
+                if (isKingAttacked && cellWithPiece.cell == moves.first().from && cellWithPiece.piece!!.pieceName == PieceName.King) {
+                    kingSide = cellWithPiece.piece.side.opposite()
+                }
                 val move: Move? = moves.find { cellWithPiece.cell == it.from }
                 if (move != null) {
                     cellWithPiece.piece?.let {
@@ -57,7 +67,7 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
                 }
             }
         )
-        val image = drawBoardWithPieces(boardWithoutMovedPiece)
+        val image = drawBoardWithPieces(boardWithoutMovedPiece, kingSide)
         val frameCount = MOVE_DURATION / frameDuration
         println("Rendered move ${moves.joinToString()}}")
         for (ix in 0..frameCount) {
@@ -67,25 +77,37 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
             movedPieces.forEach { (movedPiece, move) ->
                 val pieceIcon = movedPiece.icon()
                 val leftTopFromX = move.from.x * cellSize + topLeftBoardX
-                val leftTopFromY = (7-move.from.y) * cellSize + topLeftBoardY
+                val leftTopFromY = (7 - move.from.y) * cellSize + topLeftBoardY
                 val leftTopToX = move.to.x * cellSize + topLeftBoardX
-                val leftTopToY = (7-move.to.y) * cellSize + topLeftBoardY
-                val dx = (leftTopToX - leftTopFromX)/frameCount
-                val dy = (leftTopToY - leftTopFromY)/frameCount
-                g.drawImage(pieceIcon, leftTopFromX + dx*ix , leftTopFromY + dy*ix, cellSize, cellSize, null)
+                val leftTopToY = (7 - move.to.y) * cellSize + topLeftBoardY
+                val dx = (leftTopToX - leftTopFromX) / frameCount
+                val dy = (leftTopToY - leftTopFromY) / frameCount
+                g.drawImage(pieceIcon, leftTopFromX + dx * ix, leftTopFromY + dy * ix, cellSize, cellSize, null)
             }
             frameListener?.invoke(frame)
         }
     }
 
-    private fun drawBoardWithPieces(boardCurrent: Board): BufferedImage {
+    private fun drawBoardWithPieces(boardCurrent: Board, kingAttackedSide: Side?): BufferedImage {
         val boardWithPieces = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
         val g = boardWithPieces.graphics
         g.drawImage(cleanBoard, 0, 0, null)
         boardCurrent.cells.forEach {
+
             if (it.piece != null) {
                 val pieceBufferedImage = it.piece.icon()
                 val y = 7 - it.cell.y
+                kingAttackedSide.let { side ->
+                    if (it.piece.pieceName == PieceName.King && it.piece.side == side) {
+                        g.color = redColor
+                        g.fillRect(
+                            topLeftBoardX + cellSize * it.cell.x,
+                            topLeftBoardY + cellSize * y,
+                            cellSize,
+                            cellSize,
+                        )
+                    }
+                }
                 g.drawImage(
                     pieceBufferedImage,
                     topLeftBoardX + cellSize * it.cell.x,
@@ -111,18 +133,19 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
     }
 
     private fun Piece.pathToImage(): URL {
+        val a = MoveDrawer::class.java
         return MoveDrawer::class.java.getResource("${name()}${side()}.png")!!
     }
 
     private fun Piece.side(): String {
-        return when(side) {
+        return when (side) {
             Side.Black -> "Black"
             Side.White -> "White"
         }
     }
 
     private fun Piece.name(): String {
-        return when(pieceName) {
+        return when (pieceName) {
             PieceName.Pawn -> "Pawn"
             PieceName.Knight -> "Knight"
             PieceName.Bishop -> "Bishop"
@@ -132,7 +155,7 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         }
     }
 
-   private fun drawCleanBoard(): BufferedImage {
+    private fun drawCleanBoard(): BufferedImage {
         val board = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
         val g = board.graphics
         g.color = backgroundColor
@@ -154,5 +177,6 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         private val blackColor = Color.decode("#A57550")
         private val whiteColor = Color.decode("#EBD0A6")
         private val backgroundColor = Color.decode("#E9E6E3")
+        private val redColor = Color.decode("#FF0000")
     }
 }

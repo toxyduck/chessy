@@ -21,8 +21,10 @@ class Chessy {
             game.loadMoveText()
             val moves = game.halfMoves
             val board = Board()
+            val mateMoves = mutableListOf<Pair<Boolean,Boolean>>()
             for (move in moves) {
                 board.doMove(move)
+                mateMoves.add(Pair(board.isMated, board.isKingAttacked))
             }
             val blackPlayer = game.blackPlayer.name
             val whitePlayer = game.whitePlayer.name
@@ -31,7 +33,13 @@ class Chessy {
             val domainMoves = moves.mapIndexed { ix, move ->
                 val from = Cell.fromNotation(move.from.value()) ?: throw Exception()
                 val to = Cell.fromNotation(move.to.value()) ?: throw Exception()
-                Move(from, to, board.backup[ix].isCastleMove)
+                Move(
+                    from,
+                    to,
+                    board.backup[ix].isCastleMove,
+                    mateMoves[ix].first,
+                    mateMoves[ix].second
+                )
             }
             val domainGame = Game(
                 whitePlayer,
@@ -41,26 +49,43 @@ class Chessy {
                 domainMoves
             )
             videoMaker.startRecord()
-//          Prod
-//            var currentBoard = initialState
-//            domainMoves.forEach { move ->
-//                if (move.isCastleMove) {
-//                    move.rookCastleMove()?.let { rookMove ->
-//                        drawer.drawCastle(currentBoard, move, rookMove)
-//                    }
-//                } else {
-//                    drawer.drawMove(currentBoard, move)
-//                }
-//                currentBoard = currentBoard.mutate(move)
-//            }
-//**************************Test*************************************
             var currentBoard = initialState
-            domainMoves.subList(0, 10).forEach {
-                drawer.drawMove(currentBoard, it)
-                currentBoard = currentBoard.mutate(it)
+
+//**************************Prod*************************************
+            domainMoves.forEach { move ->
+            drawMove(move, currentBoard)
+            currentBoard = currentBoard.mutate(move)
             }
-            videoMaker.endRecord()
+//**************************Test*************************************
+//            domainMoves.subList(0, 10).forEach {
+//                drawMove(it, currentBoard)
+//                currentBoard = currentBoard.mutate(it)
+//            }
+//            videoMaker.endRecord()
 //********************************************************************
+        }
+    }
+
+    private fun drawMove(move: Move, currentBoard: io.chessy.tool.Board){
+        when{
+            move.isCastleMove -> {
+                move.rookCastleMove()?.let { rookMove ->
+                    drawer.drawCastle(currentBoard, move, rookMove)
+                }
+            }
+//            move.isMateMove -> {
+//                move.rookCastleMove()?.let { rookMove ->
+//                    drawer.drawCastle(currentBoard, move, rookMove)
+//                }
+//            }
+            move.isKingAttacked -> {
+                move.rookCastleMove()?.let { rookMove ->
+                    drawer.drawCastle(currentBoard, move, rookMove)
+                }
+            }
+            else ->  { drawer.drawMove(currentBoard, move) }
+
+
         }
     }
 }
