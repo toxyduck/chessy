@@ -1,3 +1,5 @@
+package io.chessy.tool
+
 enum class PieceName {
     Pawn,
     Knight,

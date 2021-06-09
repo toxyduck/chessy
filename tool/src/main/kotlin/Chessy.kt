@@ -1,3 +1,5 @@
+package io.chessy.tool
+
 import java.lang.Exception
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
