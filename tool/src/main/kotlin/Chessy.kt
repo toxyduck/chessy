@@ -60,8 +60,8 @@ class Chessy {
 //                drawMove(it, currentBoard)
 //                currentBoard = currentBoard.mutate(it)
 //            }
-//            videoMaker.endRecord()
 //********************************************************************
+            videoMaker.endRecord()
         }
     }
 
@@ -78,15 +78,11 @@ class Chessy {
 //                }
 //            }
             move.isKingAttacked -> {
-                move.rookCastleMove()?.let { rookMove ->
-                    drawer.drawCastle(currentBoard, move, rookMove)
-                }
+                drawer.drawKingAttacked(currentBoard, move)
             }
             else -> {
                 drawer.drawMove(currentBoard, move)
             }
-
-
         }
     }
 }

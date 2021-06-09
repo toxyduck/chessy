@@ -53,8 +53,8 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         var kingSide: Side? = null
         val boardWithoutMovedPiece = board.copy(
             cells = board.cells.map { cellWithPiece ->
-                if (isKingAttacked && cellWithPiece.cell == moves.first().from && cellWithPiece.piece!!.pieceName == PieceName.King) {
-                    kingSide = cellWithPiece.piece.side.opposite()
+                if (isKingAttacked && cellWithPiece.cell == moves.first().from) {
+                    kingSide = cellWithPiece.piece!!.side.opposite()
                 }
                 val move: Move? = moves.find { cellWithPiece.cell == it.from }
                 if (move != null) {
