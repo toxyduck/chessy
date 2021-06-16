@@ -58,8 +58,19 @@ data class CellWithPiece(val cell: Cell, val piece: Piece?)
 data class Board(val cells: List<CellWithPiece>) {
     fun mutate(move: Move): Board {
         val piece = cells.find { it.cell == move.from }?.piece
+        var capturedCell: Cell? = null
+        if (piece != null && piece.pieceName == PieceName.Pawn) {
+            val isCapture = (move.from.x - move.to.x) != 0
+            if (isCapture) {
+                val capturedPiece = cells.find { it.cell == move.to }?.piece
+                if (capturedPiece == null) {
+                    capturedCell = Cell(move.to.x, move.from.y)
+                }
+            }
+        }
         val mutated = this.copy(cells = this.cells.map {
             when (it.cell) {
+                capturedCell -> it.copy(piece = null)
                 move.from -> it.copy(piece = null)
                 move.to -> it.copy(piece = piece)
                 else -> it

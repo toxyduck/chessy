@@ -51,15 +51,15 @@ class Chessy {
             var currentBoard = initialState
 
 //**************************Prod*************************************
-//            domainMoves.forEach { move ->
-//                drawMove(move, currentBoard)
-//                currentBoard = currentBoard.mutate(move)
-//            }
-//**************************Test*************************************
-            domainMoves.subList(0, 10).forEach {
-                drawMove(it, currentBoard)
-                currentBoard = currentBoard.mutate(it)
+            domainMoves.forEach { move ->
+                drawMove(move, currentBoard)
+                currentBoard = currentBoard.mutate(move)
             }
+//**************************Test*************************************
+//            domainMoves.subList(0, 10).forEach {
+//                drawMove(it, currentBoard)
+//                currentBoard = currentBoard.mutate(it)
+//            }
 //********************************************************************
             videoMaker.endRecord()
         }
