@@ -1,9 +1,11 @@
 package io.chessy.tool
 
 import java.awt.Color
+import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.net.URL
 import javax.imageio.ImageIO
+import kotlin.math.min
 
 interface MoveDrawer {
     fun addFrameListener(listener: (BufferedImage) -> Unit)
@@ -156,14 +158,18 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
 
     private fun drawCleanBoard(): BufferedImage {
         val board = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
+        val boardView = BoardView(
+            x = topLeftBoardX,
+            y = topLeftBoardY,
+            width = boardSize,
+            height = boardSize,
+            colorBlack = blackColor,
+            colorWhite = whiteColor
+        )
         val g = board.graphics
         g.color = backgroundColor
         g.fillRect(0, 0, width, height)
-        realBoard.cells.forEach {
-            val y = 7 - it.cell.y
-            g.color = if (it.cell.isBlack()) blackColor else whiteColor
-            g.fillRect(topLeftBoardX + cellSize * it.cell.x, topLeftBoardY + cellSize * y, cellSize, cellSize)
-        }
+        boardView.draw(g)
         return board
     }
 
@@ -177,5 +183,130 @@ class JFrameMoveDrawer(private val width: Int, val height: Int, val fps: Int) : 
         private val whiteColor = Color.decode("#EBD0A6")
         private val backgroundColor = Color.decode("#E9E6E3")
         private val redColor = Color.decode("#FF0000")
+    }
+}
+
+interface View {
+    val x: Int
+    val y: Int
+    val width: Int
+    val height: Int
+    fun draw(graphics: Graphics)
+}
+
+interface MovableView<T : View> {
+    fun move(x: Int, y: Int): T
+}
+
+class BoardView(
+    override val x: Int,
+    override val y: Int,
+    override val width: Int,
+    override val height: Int,
+    private val colorWhite: Color,
+    private val colorBlack: Color
+) : View {
+
+    private val cellSize: Int = min(width, height) / 8
+
+    private val cellViews by lazy { views() }
+
+    override fun draw(graphics: Graphics) {
+        cellViews.forEach { it.draw(graphics) }
+    }
+
+    private fun views(): List<CellView> {
+        return (0 until 64).map { ix ->
+            val ixX = ix % 8
+            val ixY = 7 - (ix / 8)
+            val isWhite = isCellWhite(ixX, ixY)
+            val cellX = x + cellSize * ixX
+            val cellY = y + cellSize * ixY
+            CellView(
+                x = cellX,
+                y = cellY,
+                width = cellSize,
+                height = cellSize,
+                color = if (isWhite) colorWhite else colorBlack
+            )
+        }
+    }
+
+    private fun isCellWhite(x: Int, y: Int): Boolean {
+        return ((x + y) % 2) == 0
+    }
+}
+
+class PieceView (
+    override val x: Int,
+    override val y: Int,
+    override val width: Int,
+    override val height: Int,
+    private val piece: Piece
+) : View, MovableView<PieceView> {
+
+    override fun draw(graphics: Graphics) {
+        graphics.drawImage(
+            piece.icon(),
+            x,
+            y,
+            width,
+            height,
+            null
+        )
+    }
+
+    override fun move(x: Int, y: Int): PieceView {
+        return PieceView(x, y, width, height, piece)
+    }
+
+    private fun Piece.icon(): BufferedImage {
+        val cachedImage = piecesCache[this]
+        return if (cachedImage != null) {
+            cachedImage
+        } else {
+            val image = ImageIO.read(this.pathToImage())
+            piecesCache[this] = image
+            image
+        }
+    }
+
+    private fun Piece.pathToImage(): URL {
+        return PieceView::class.java.getResource("/${name()}${side()}.png")!!
+    }
+
+    private fun Piece.side(): String {
+        return when (side) {
+            Side.Black -> "Black"
+            Side.White -> "White"
+        }
+    }
+
+    private fun Piece.name(): String {
+        return when (pieceName) {
+            PieceName.Pawn -> "Pawn"
+            PieceName.Knight -> "Knight"
+            PieceName.Bishop -> "Bishop"
+            PieceName.Rook -> "Rook"
+            PieceName.Queen -> "Queen"
+            PieceName.King -> "King"
+        }
+    }
+
+    private companion object {
+        val piecesCache: MutableMap<Piece, BufferedImage> = mutableMapOf()
+    }
+}
+
+class CellView(
+    override val x: Int,
+    override val y: Int,
+    override val width: Int,
+    override val height: Int,
+    private val color: Color
+) : View {
+    override fun draw(graphics: Graphics) {
+        graphics.color = color
+        graphics.fillRect(x, y, width, height)
     }
 }
