@@ -21,7 +21,7 @@ class FFmpegVideoMaker(width: Int, height: Int, fps: Int) : VideoMaker {
     private val converter = Java2DFrameConverter()
 
     init {
-        recorder.videoCodec = avcodec.AV_CODEC_ID_NONE
+        recorder.videoCodec = avcodec.AV_CODEC_ID_H264
         recorder.pixelFormat = avutil.AV_PIX_FMT_YUV420P
         recorder.frameRate = fps.toDouble()
         recorder.format = "mp4"
