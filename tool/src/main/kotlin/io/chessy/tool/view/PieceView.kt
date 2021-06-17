@@ -1,6 +1,8 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.*
+import io.chessy.tool.Piece
+import io.chessy.tool.PieceName
+import io.chessy.tool.Side
 import io.chessy.tool.primitive.MovableView
 import java.awt.Graphics
 import java.awt.image.BufferedImage

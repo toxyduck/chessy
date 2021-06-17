@@ -1,8 +1,8 @@
 package io.chessy.tool.animator
 
 import io.chessy.tool.interpolator.Interpolator
-import io.chessy.tool.primitive.Point
 import io.chessy.tool.primitive.MovableView
+import io.chessy.tool.primitive.Point
 import io.chessy.tool.view.View
 
 class MoveAnimator(

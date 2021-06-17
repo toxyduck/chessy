@@ -19,12 +19,13 @@ class Controller(
     private val topLeftBoardX = centerBoardX - boardSize / 2
     private val topLeftBoardY = centerBoardY - boardSize / 2
 
-    fun startRender(){
+    fun startRender() {
         val gameView = GameView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, startBoard)
         var currentBoard = startBoard
         moves.forEach { move ->
-            gameView.doMove(currentBoard , move)
-            while (!gameView.isMoveFinished()){
+            println("Rendered move ${moves.joinToString()}}")
+            gameView.doMove(currentBoard, move)
+            while (!gameView.isMoveFinished()) {
                 val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
                 val graphics = frame.graphics
                 gameView.draw(graphics)

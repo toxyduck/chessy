@@ -5,7 +5,7 @@ import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 import io.chessy.tool.controller.Controller
 
 fun com.github.bhlangonijr.chesslib.Piece.toDomainPiece(): Piece? {
-   return when(this){
+    return when (this) {
         com.github.bhlangonijr.chesslib.Piece.WHITE_PAWN -> Piece(PieceName.Pawn, Side.White)
         com.github.bhlangonijr.chesslib.Piece.WHITE_KNIGHT -> Piece(PieceName.King, Side.White)
         com.github.bhlangonijr.chesslib.Piece.WHITE_BISHOP -> Piece(PieceName.Bishop, Side.White)
@@ -25,7 +25,7 @@ fun com.github.bhlangonijr.chesslib.Piece.toDomainPiece(): Piece? {
 
 class Chessy {
 
-//    private val drawer = JFrameMoveDrawer(1080, 1920, 60)
+    //    private val drawer = JFrameMoveDrawer(1080, 1920, 60)
     private val videoMaker = FFmpegVideoMaker(1080, 1920, 60)
 
 //    init {
@@ -74,9 +74,9 @@ class Chessy {
             var currentBoard = initialState
 
 //**************************Prod*************************************
-             val controller = Controller(currentBoard, domainMoves,1080, 1920, 60 ){
-                 videoMaker.addFrame(it)
-             }
+            val controller = Controller(currentBoard, domainMoves, 1080, 1920, 60) {
+                videoMaker.addFrame(it)
+            }
             controller.startRender()
 //            domainMoves.forEach { move ->
 //                drawMove(move, currentBoard)
