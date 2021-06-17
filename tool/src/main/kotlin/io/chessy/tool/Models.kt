@@ -56,6 +56,7 @@ data class Cell(val x: Int, val y: Int) {
 data class CellWithPiece(val cell: Cell, val piece: Piece?)
 
 data class Board(val cells: List<CellWithPiece>) {
+
     fun mutate(move: Move): Board {
         val piece = cells.find { it.cell == move.from }?.piece
         var capturedCell: Cell? = null
@@ -78,29 +79,42 @@ data class Board(val cells: List<CellWithPiece>) {
         })
         return if (move.isCastleMove) move.rookCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
     }
+
+    fun filter(filter: List<Cell>): Board {
+        return copy(cells = this.cells.map {
+            if (filter.contains(it.cell)) it.copy(piece = null) else it
+        })
+    }
+
+    fun kingCell(side: Side): Cell {
+        return cells.find { it.piece?.pieceName == PieceName.King && it.piece.side == side }?.cell!!
+    }
 }
 
 data class Move(
     val from: Cell,
     val to: Cell,
-    val isCastleMove: Boolean,
+    val isCastleMove: Boolean = false,
     val isMateMove: Boolean = false,
-    val isKingAttacked: Boolean = false
+    val isKingAttacked: Boolean = false,
+    val piece: Piece
 ) {
+
+    val side = piece.side
 
     fun rookCastleMove(): Move? {
         if (!isCastleMove) return null
         return if (from.y == 7) {
             if (to.x >= 4) {
-                Move(Cell(7, 7), Cell(5, 7), false)
+                Move(Cell(7, 7), Cell(5, 7), piece = Piece(PieceName.Rook, piece.side))
             } else {
-                Move(Cell(0, 7), Cell(3, 7), false)
+                Move(Cell(0, 7), Cell(3, 7), piece = Piece(PieceName.Rook, piece.side))
             }
         } else {
             if (to.x >= 4) {
-                Move(Cell(7, 0), Cell(5, 0), false)
+                Move(Cell(7, 0), Cell(5, 0), piece = Piece(PieceName.Rook, piece.side))
             } else {
-                Move(Cell(0, 0), Cell(3, 0), false)
+                Move(Cell(0, 0), Cell(3, 0), piece = Piece(PieceName.Rook, piece.side))
             }
         }
     }
