@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 
 class OnceDrawView(private val wrappedView: View) : View by wrappedView {
 
-    private val buffer by lazy { BufferedImage(1080, 1920, BufferedImage.TYPE_3BYTE_BGR) }
+    private val buffer by lazy { BufferedImage(1080, 1920, BufferedImage.TYPE_INT_ARGB) }
     private var isRendered = false
 
 
