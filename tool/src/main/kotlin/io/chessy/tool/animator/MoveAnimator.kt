@@ -14,7 +14,7 @@ class MoveAnimator(
 
     override fun animate(animatedView: MovableView, condition: Float): View {
         val diffPoint = Point(target.x - animatedView.x, target.y - animatedView.y)
-        return animatedView.move(diffPoint.x * condition, diffPoint.y * condition)
+        return animatedView.move(diffPoint.x * condition + target.x, diffPoint.y * condition + target.y)
     }
 
 }

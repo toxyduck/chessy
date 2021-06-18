@@ -16,10 +16,10 @@ class OnceDrawView(private val wrappedView: View) : View by wrappedView {
         }
         graphics.drawImage(
             buffer,
-            x,
-            y,
-            width,
-            height,
+            0,
+            0,
+            1080,
+            1920,
             null
         )
     }

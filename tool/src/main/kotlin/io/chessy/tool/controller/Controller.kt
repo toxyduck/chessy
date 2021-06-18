@@ -27,12 +27,10 @@ class Controller(
             gameView.doMove(currentBoard, move)
             while (!gameView.isMoveFinished()) {
                 val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
-                val graphics = frame.graphics
-                gameView.draw(graphics)
-                graphics.drawImage(frame, 0, 0, null)
+                gameView.draw(frame.graphics)
                 frameListener(frame)
-                currentBoard = currentBoard.mutate(move)
             }
+            currentBoard = currentBoard.mutate(move)
         }
     }
 }
