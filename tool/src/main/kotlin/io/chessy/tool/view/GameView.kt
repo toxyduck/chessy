@@ -110,8 +110,8 @@ class GameView(
 
     companion object {
         private const val MOVE_DURATION = 500 / 16
-        private val blackColor = Color.decode("#A57550")
-        private val whiteColor = Color.decode("#EBD0A6")
-        private val redColor = Color.decode("#FF0000")
+        private val blackColor = Color.decode("#B27B41")
+        private val whiteColor = Color.decode("#DEC496")
+        private val redColor = Color.decode("#B24341")
     }
 }
