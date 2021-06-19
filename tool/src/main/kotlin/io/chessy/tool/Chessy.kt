@@ -2,15 +2,12 @@ package io.chessy.tool
 
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
+import io.chessy.tool.controller.Controller
+
 
 class Chessy {
 
-    private val drawer = JFrameMoveDrawer(1080, 1920, 60)
     private val videoMaker = FFmpegVideoMaker(1080, 1920, 60)
-
-    init {
-        drawer.addFrameListener(videoMaker::addFrame)
-    }
 
     fun fromPgn(pgnString: String) {
         val pgn = PgnHolder("")
@@ -21,7 +18,9 @@ class Chessy {
             val moves = game.halfMoves
             val board = Board()
             val mateMoves = mutableListOf<Pair<Boolean, Boolean>>()
+            val piecesMoved = mutableListOf<Piece>()
             for (move in moves) {
+                piecesMoved.add(board.getPiece(move.from).toDomainPiece()!!)
                 board.doMove(move)
                 mateMoves.add(Pair(board.isMated, board.isKingAttacked))
             }
@@ -37,7 +36,8 @@ class Chessy {
                     to,
                     board.backup[ix].isCastleMove,
                     mateMoves[ix].first,
-                    mateMoves[ix].second
+                    mateMoves[ix].second,
+                    piecesMoved[ix]
                 )
             }
             val domainGame = Game(
@@ -48,41 +48,11 @@ class Chessy {
                 domainMoves
             )
             videoMaker.startRecord()
-            var currentBoard = initialState
-
-//**************************Prod*************************************
-            domainMoves.forEach { move ->
-                drawMove(move, currentBoard)
-                currentBoard = currentBoard.mutate(move)
+            val controller = Controller(initialState, domainMoves, 1080, 1920, 60) {
+                videoMaker.addFrame(it)
             }
-//**************************Test*************************************
-//            domainMoves.subList(0, 10).forEach {
-//                drawMove(it, currentBoard)
-//                currentBoard = currentBoard.mutate(it)
-//            }
-//********************************************************************
+            controller.startRender()
             videoMaker.endRecord()
-        }
-    }
-
-    private fun drawMove(move: Move, currentBoard: io.chessy.tool.Board) {
-        when {
-            move.isCastleMove -> {
-                move.rookCastleMove()?.let { rookMove ->
-                    drawer.drawCastle(currentBoard, move, rookMove)
-                }
-            }
-//            move.isMateMove -> {
-//                move.rookCastleMove()?.let { rookMove ->
-//                    drawer.drawCastle(currentBoard, move, rookMove)
-//                }
-//            }
-            move.isKingAttacked -> {
-                drawer.drawKingAttacked(currentBoard, move)
-            }
-            else -> {
-                drawer.drawMove(currentBoard, move)
-            }
         }
     }
 }
