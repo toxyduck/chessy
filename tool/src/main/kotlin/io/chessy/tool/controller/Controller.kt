@@ -26,6 +26,7 @@ class Controller(
             println("Rendered move ${moves.joinToString()}}")
             gameView.doMove(currentBoard, move)
             while (!gameView.isMoveFinished()) {
+                // important to use this pixel format
                 val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
                 gameView.draw(frame.graphics)
                 frameListener(frame)

@@ -1,5 +1,6 @@
 package io.chessy.tool.view
 
+import io.chessy.tool.primitive.MovableView
 import java.awt.Color
 import java.awt.Graphics
 import kotlin.math.min
@@ -11,7 +12,7 @@ class BoardView(
     override val height: Int,
     private val colorWhite: Color,
     private val colorBlack: Color
-) : View {
+) : MovableView {
 
     private val cellSize: Int = min(width, height) / 8
 
@@ -19,6 +20,10 @@ class BoardView(
 
     override fun draw(graphics: Graphics) {
         cellViews.forEach { it.draw(graphics) }
+    }
+
+    override fun move(x: Int, y: Int): MovableView {
+        return BoardView(x, y, width, height, colorWhite, colorBlack)
     }
 
     private fun views(): List<CellView> {
