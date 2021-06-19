@@ -25,7 +25,7 @@ data class Piece(val pieceName: PieceName, val side: Side)
 fun com.github.bhlangonijr.chesslib.Piece.toDomainPiece(): Piece? {
     return when (this) {
         com.github.bhlangonijr.chesslib.Piece.WHITE_PAWN -> Piece(PieceName.Pawn, Side.White)
-        com.github.bhlangonijr.chesslib.Piece.WHITE_KNIGHT -> Piece(PieceName.King, Side.White)
+        com.github.bhlangonijr.chesslib.Piece.WHITE_KNIGHT -> Piece(PieceName.Knight, Side.White)
         com.github.bhlangonijr.chesslib.Piece.WHITE_BISHOP -> Piece(PieceName.Bishop, Side.White)
         com.github.bhlangonijr.chesslib.Piece.WHITE_ROOK -> Piece(PieceName.Rook, Side.White)
         com.github.bhlangonijr.chesslib.Piece.WHITE_QUEEN -> Piece(PieceName.Queen, Side.White)
@@ -41,10 +41,6 @@ fun com.github.bhlangonijr.chesslib.Piece.toDomainPiece(): Piece? {
 }
 
 data class Cell(val x: Int, val y: Int) {
-    fun isBlack(): Boolean {
-        return ((x + y) % 2) == 0
-    }
-
     companion object {
         fun fromNotation(notationName: String): Cell? {
             if (notationName.length != 2) return null

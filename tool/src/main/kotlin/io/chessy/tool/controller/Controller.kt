@@ -3,6 +3,7 @@ package io.chessy.tool.controller
 import io.chessy.tool.Board
 import io.chessy.tool.Move
 import io.chessy.tool.view.GameView
+import io.chessy.tool.view.ViewGroup
 import java.awt.image.BufferedImage
 
 class Controller(
@@ -20,12 +21,13 @@ class Controller(
     private val topLeftBoardY = centerBoardY - boardSize / 2
 
     fun startRender() {
-        val gameView = GameView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, startBoard)
+        val gameView: ViewGroup<GameView.GameViewAction> =
+            GameView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, startBoard)
         var currentBoard = startBoard
         moves.forEach { move ->
-            println("Rendered move ${moves.joinToString()}}")
-            gameView.doMove(currentBoard, move)
-            while (!gameView.isMoveFinished()) {
+            println("Rendered move $move}")
+            gameView.produceAction(GameView.GameViewAction(currentBoard, move))
+            while (!gameView.isFinish()) {
                 // important to use this pixel format
                 val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
                 gameView.draw(frame.graphics)
