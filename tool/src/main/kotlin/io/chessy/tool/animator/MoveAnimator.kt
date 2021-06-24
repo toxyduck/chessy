@@ -1,20 +1,19 @@
 package io.chessy.tool.animator
 
 import io.chessy.tool.interpolator.Interpolator
-import io.chessy.tool.primitive.MovableView
 import io.chessy.tool.primitive.Point
 import io.chessy.tool.view.View
+import io.chessy.tool.view.move
 
 class MoveAnimator(
     interpolator: Interpolator,
-    animatedView: MovableView,
+    animatedView: View,
     duration: Int,
     private val target: Point
-) : Animator<MovableView>(interpolator, animatedView, duration) {
+) : Animator<View>(interpolator, animatedView, duration) {
 
-    override fun animate(animatedView: MovableView, condition: Float): View {
+    override fun animate(animatedView: View, condition: Float): View {
         val diffPoint = Point(target.x - animatedView.x, target.y - animatedView.y)
         return animatedView.move(diffPoint.x * condition + animatedView.x, diffPoint.y * condition + animatedView.y)
     }
-
 }

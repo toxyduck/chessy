@@ -29,4 +29,7 @@ abstract class Animator<T : View>(
 
     override fun isFinish(): Boolean = isFinish
 
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
+        throw NotImplementedError("Animators cannot be copied")
+    }
 }

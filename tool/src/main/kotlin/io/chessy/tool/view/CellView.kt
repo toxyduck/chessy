@@ -1,6 +1,5 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.primitive.MovableView
 import java.awt.Color
 import java.awt.Graphics
 
@@ -10,13 +9,13 @@ class CellView(
     override val width: Int,
     override val height: Int,
     private val color: Color
-) : MovableView {
+) : View {
     override fun draw(graphics: Graphics) {
         graphics.color = color
         graphics.fillRect(x, y, width, height)
     }
 
-    override fun move(x: Int, y: Int): MovableView {
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
         return CellView(x, y, width, height, color)
     }
 }

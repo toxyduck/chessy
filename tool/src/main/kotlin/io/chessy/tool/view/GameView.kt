@@ -14,7 +14,7 @@ class GameView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
-    board: Board
+    private val board: Board
 ) : ViewGroup<GameView.GameViewAction>() {
 
     class GameViewAction(val currentBoard: Board, val move: Move)
@@ -50,6 +50,10 @@ class GameView(
                 move(currentBoard, move)
             }
         }
+    }
+
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
+        return GameView(x, y, width, height, board)
     }
 
     private fun move(currentBoard: Board, move: Move) {

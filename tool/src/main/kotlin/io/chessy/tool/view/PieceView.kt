@@ -3,7 +3,6 @@ package io.chessy.tool.view
 import io.chessy.tool.Piece
 import io.chessy.tool.PieceName
 import io.chessy.tool.Side
-import io.chessy.tool.primitive.MovableView
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.net.URL
@@ -15,7 +14,7 @@ class PieceView(
     override val width: Int,
     override val height: Int,
     private val piece: Piece
-) : View, MovableView {
+) : View {
 
     override fun draw(graphics: Graphics) {
         graphics.drawImage(
@@ -28,7 +27,7 @@ class PieceView(
         )
     }
 
-    override fun move(x: Int, y: Int): MovableView {
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
         return PieceView(x, y, width, height, piece)
     }
 
