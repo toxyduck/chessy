@@ -3,6 +3,7 @@ package io.chessy.tool.controller
 import io.chessy.tool.Board
 import io.chessy.tool.Move
 import io.chessy.tool.view.GameView
+import io.chessy.tool.view.RootView
 import io.chessy.tool.view.ViewGroup
 import java.awt.image.BufferedImage
 
@@ -14,15 +15,8 @@ class Controller(
     private val fps: Int,
     private val frameListener: ((BufferedImage) -> Unit)
 ) {
-    private val boardSize = width.coerceAtMost(height)
-    private val centerBoardX = width / 2
-    private val centerBoardY = height / 2
-    private val topLeftBoardX = centerBoardX - boardSize / 2
-    private val topLeftBoardY = centerBoardY - boardSize / 2
-
     fun startRender() {
-        val gameView: ViewGroup<GameView.GameViewAction> =
-            GameView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, startBoard)
+        val gameView: ViewGroup<GameView.GameViewAction> = RootView(0, 0, width, height, startBoard)
         var currentBoard = startBoard
         moves.take(10).forEach { move ->
             println("Rendered move $move}")

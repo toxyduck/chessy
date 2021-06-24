@@ -113,7 +113,5 @@ class GameView(
         private val blackColor = Color.decode("#B27B41")
         private val whiteColor = Color.decode("#DEC496")
         private val redColor = Color.decode("#B24341")
-        private const val FONT_NAME = "SansSerif"
-        private const val FONT_SIZE = 32
     }
 }
