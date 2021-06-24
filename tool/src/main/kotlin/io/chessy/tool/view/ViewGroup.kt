@@ -8,7 +8,9 @@ abstract class ViewGroup<T> : ActionView<T> {
 
     private var childes: MutableList<ScopedView> = mutableListOf()
 
-    abstract fun obtainAction(action: T)
+    open fun obtainAction(action: T) {
+        // No actions
+    }
 
     override fun isFinish(): Boolean {
         return childes.fold(true) { acc, scopedView ->

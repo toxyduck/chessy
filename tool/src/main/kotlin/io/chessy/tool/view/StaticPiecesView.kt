@@ -1,7 +1,6 @@
 package io.chessy.tool.view
 
 import io.chessy.tool.Board
-import java.awt.Graphics
 import kotlin.math.min
 
 class StaticPiecesView(
@@ -10,14 +9,12 @@ class StaticPiecesView(
     override val width: Int,
     override val height: Int,
     private val board: Board
-) : View {
+) : ViewGroup<Nothing>() {
 
     private val cellSize: Int = min(width, height) / 8
 
-    private val pieceViews by lazy { views() }
-
-    override fun draw(graphics: Graphics) {
-        pieceViews.forEach { it.draw(graphics) }
+    init {
+        views().forEach { addChild(it) }
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {

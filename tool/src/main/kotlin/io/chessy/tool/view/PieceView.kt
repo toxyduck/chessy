@@ -65,6 +65,6 @@ class PieceView(
     }
 
     private companion object {
-        val piecesCache: MutableMap<Piece, BufferedImage> = mutableMapOf()
+        private val piecesCache: MutableMap<Piece, BufferedImage> = mutableMapOf()
     }
 }
