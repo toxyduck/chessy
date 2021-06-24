@@ -1,10 +1,8 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.Board
-import io.chessy.tool.Move
+import io.chessy.tool.*
 import io.chessy.tool.animator.MoveAnimator
 import io.chessy.tool.interpolator.LinearInterpolator
-import io.chessy.tool.opposite
 import io.chessy.tool.primitive.Point
 import java.awt.Color
 import kotlin.math.min
@@ -115,6 +113,7 @@ class GameView(
         private val blackColor = Color.decode("#B27B41")
         private val whiteColor = Color.decode("#DEC496")
         private val redColor = Color.decode("#B24341")
+        private const val FONT_NAME = "SansSerif"
+        private const val FONT_SIZE = 32
     }
-
 }

@@ -24,7 +24,7 @@ class Controller(
         val gameView: ViewGroup<GameView.GameViewAction> =
             GameView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, startBoard)
         var currentBoard = startBoard
-        moves.forEach { move ->
+        moves.take(10).forEach { move ->
             println("Rendered move $move}")
             gameView.produceAction(GameView.GameViewAction(currentBoard, move))
             while (!gameView.isFinish()) {
