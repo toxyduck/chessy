@@ -1,6 +1,7 @@
 package io.chessy.tool.view
 
 import java.awt.Color
+import java.awt.Font
 import java.awt.Graphics
 import kotlin.math.min
 
@@ -9,11 +10,14 @@ class BorderView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
-    private val borderSize: Int
-) :
-    ViewGroup<Nothing>() {
+    private val borderSize: Int,
+    private val symbolPadding: Int,
+    private val symbolHeight: Int,
+    private val symbolWidth: Int,
+) : ViewGroup<Nothing>() {
+
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return BorderView(x, y, width, height, borderSize)
+        return BorderView(x, y, width, height, borderSize, symbolPadding, symbolHeight, symbolWidth)
     }
 
     override fun draw(graphics: Graphics) {
@@ -29,34 +33,43 @@ class BorderView(
     }
 
     private fun views(): List<SymbolView> {
-        val numberBorder = ('1' until '9').mapIndexed { ix, symbol->
-            val yCoord = y + height - borderSize - ix * cellSize - cellSize / 2
-            val xCoord = x + borderSize / 2
+        val numberBorder = ('1' until '9').mapIndexed { ix, symbol ->
+            val yCoord = y + height - borderSize - ix * cellSize - cellSize / 2 - symbolHeight / 2
+            val xCoord = x + symbolPadding
             SymbolView(
                 x = xCoord,
                 y = yCoord,
                 symbol = symbol,
                 color = whiteColor,
-                fontName = FONT_NAME,
-                size = FONT_SIZE
+                font = FONT
             )
         }
-        val symbolBorder = ('a' until 'i').mapIndexed { ix, symbol ->
+        val symbolBorder = ('A' until 'I').mapIndexed { ix, symbol ->
             SymbolView(
-                x = x + borderSize + ix * cellSize + cellSize / 2,
-                y = width - borderSize / 2,
+                x = x + borderSize + ix * cellSize + cellSize / 2 - symbolWidth / 2,
+                y = width - borderSize + symbolPadding,
                 symbol = symbol,
                 color = whiteColor,
-                fontName = FONT_NAME,
-                size = FONT_SIZE
+                font = FONT
             )
         }
         return numberBorder + symbolBorder
     }
 
+    class BorderViewConfig(
+        val borderSize: Int,
+        val symbolPadding: Int,
+        val symbolHeight: Int,
+        val symbolWidth: Int,
+        val font: Font,
+        val color: Color
+    )
+
     companion object{
         private const val FONT_NAME = "SansSerif"
         private const val FONT_SIZE = 32
+        private const val FONT_STYLE = Font.PLAIN
+        private val FONT = Font(FONT_NAME, FONT_STYLE, FONT_SIZE)
         private val whiteColor = Color.decode("#FFFFFF")
         private val grayColor = Color.decode("#AAAAAA")
     }

@@ -16,7 +16,10 @@ class Controller(
     private val frameListener: ((BufferedImage) -> Unit)
 ) {
     fun startRender() {
-        val gameView: ViewGroup<GameView.GameViewAction> = RootView(0, 0, width, height, startBoard)
+        // костыль
+        val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
+
+        val gameView: ViewGroup<GameView.GameViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
         var currentBoard = startBoard
         moves.take(10).forEach { move ->
             println("Rendered move $move}")
