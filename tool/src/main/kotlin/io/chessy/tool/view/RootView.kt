@@ -58,6 +58,12 @@ class RootView(
         return RootView(x, y, width, height, graphicsContext, board)
     }
 
+    override fun draw(graphics: Graphics) {
+        graphics.color = backgroundColor
+        graphics.fillRect(x, y, width, height)
+        super.draw(graphics)
+    }
+
     companion object {
 
         private const val FONT_NAME = "SansSerif"
@@ -71,7 +77,8 @@ class RootView(
         private val CHESS_SYMBOLS = SYMBOLS_VERTICAL + SYMBOLS_HORIZONTAL
         private const val GAME_VIEW_PADDING = 8
 
-        private val whiteColor = Color.decode("#FFFFFF")
-        private val grayColor = Color.decode("#AAAAAA")
+        private val whiteColor = Color(0x88FFFFFF.toInt(), true)
+        private val grayColor = Color.decode("#272522")
+        private val backgroundColor = Color.decode("#4D4D4D")
     }
 }
