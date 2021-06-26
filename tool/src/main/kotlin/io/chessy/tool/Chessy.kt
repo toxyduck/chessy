@@ -18,9 +18,9 @@ class Chessy {
             val moves = game.halfMoves
             val board = Board()
             val mateMoves = mutableListOf<Pair<Boolean, Boolean>>()
-            val piecesMoved = mutableListOf<Piece>()
+            val piecesMoved = mutableListOf<Pair<Piece, PromotionPiece>>()
             for (move in moves) {
-                piecesMoved.add(board.getPiece(move.from).toDomainPiece()!!)
+                piecesMoved.add(Pair(board.getPiece(move.from).toDomainPiece()!!, move.promotion.toDomainPiece()))
                 board.doMove(move)
                 mateMoves.add(Pair(board.isMated, board.isKingAttacked))
             }
@@ -37,7 +37,8 @@ class Chessy {
                     board.backup[ix].isCastleMove,
                     mateMoves[ix].first,
                     mateMoves[ix].second,
-                    piecesMoved[ix]
+                    piecesMoved[ix].first,
+                    piecesMoved[ix].second
                 )
             }
             val domainGame = Game(

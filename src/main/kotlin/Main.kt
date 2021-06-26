@@ -5,7 +5,7 @@ import com.github.kittinunf.result.Result
 import io.chessy.tool.Chessy
 
 fun main() {
-    val httpAsync = "https://lichess.org/game/export/p6AZdvwt"
+    val httpAsync = "https://lichess.org/game/export/RHxgDZ8q"
         .httpGet()
         .responseString { _, _, result ->
             when (result) {

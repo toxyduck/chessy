@@ -20,6 +20,8 @@ fun Side.opposite(): Side {
     }
 }
 
+typealias PromotionPiece = Piece?
+
 data class Piece(val pieceName: PieceName, val side: Side)
 
 fun com.github.bhlangonijr.chesslib.Piece.toDomainPiece(): Piece? {
@@ -72,7 +74,7 @@ data class CellWithPiece(val cell: Cell, val piece: Piece?)
 data class Board(val cells: List<CellWithPiece>) {
 
     fun mutate(move: Move): Board {
-        val piece = cells.find { it.cell == move.from }?.piece
+        var piece = cells.find { it.cell == move.from }?.piece
         var capturedCell: Cell? = null
         if (piece != null && piece.pieceName == PieceName.Pawn) {
             val isCapture = (move.from.x - move.to.x) != 0
@@ -81,6 +83,9 @@ data class Board(val cells: List<CellWithPiece>) {
                 if (capturedPiece == null) {
                     capturedCell = Cell(move.to.x, move.from.y)
                 }
+            }
+            if (move.promotionPiece != null) {
+                piece = move.promotionPiece
             }
         }
         val mutated = this.copy(cells = this.cells.map {
@@ -111,7 +116,8 @@ data class Move(
     val isCastleMove: Boolean = false,
     val isMateMove: Boolean = false,
     val isKingAttacked: Boolean = false,
-    val piece: Piece
+    val piece: Piece,
+    val promotionPiece: Piece? = null
 ) {
 
     val side = piece.side
