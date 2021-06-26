@@ -1,10 +1,9 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.primitive.MovableView
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 
-class OnceDrawView(private val wrappedView: MovableView) : View by wrappedView {
+class OnceDrawView(private val wrappedView: View) : View by wrappedView {
 
     private val buffer by lazy { BufferedImage(wrappedView.width, wrappedView.height, BufferedImage.TYPE_INT_ARGB) }
     private var isRendered = false
@@ -23,5 +22,9 @@ class OnceDrawView(private val wrappedView: MovableView) : View by wrappedView {
             wrappedView.height,
             null
         )
+    }
+
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
+        return OnceDrawView(wrappedView.copy(x, y, width, height))
     }
 }

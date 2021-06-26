@@ -1,8 +1,6 @@
 package io.chessy.tool.view
 
 import io.chessy.tool.Board
-import io.chessy.tool.primitive.MovableView
-import java.awt.Graphics
 import kotlin.math.min
 
 class StaticPiecesView(
@@ -10,31 +8,33 @@ class StaticPiecesView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
+    private val piecePadding: Int,
     private val board: Board
-) : MovableView {
+) : ViewGroup<Nothing>() {
 
     private val cellSize: Int = min(width, height) / 8
 
-    private val pieceViews by lazy { views() }
-
-    override fun draw(graphics: Graphics) {
-        pieceViews.forEach { it.draw(graphics) }
+    init {
+        views().forEach { addChild(it) }
     }
 
-    override fun move(x: Int, y: Int): MovableView {
-        return StaticPiecesView(x, y, width, height, board)
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
+        return StaticPiecesView(x, y, width, height, piecePadding ,board)
     }
 
-    private fun views(): List<PieceView> {
+    private fun views(): List<View> {
         return board.cells
             .filter { it.piece != null }
             .map {
-                PieceView(
-                    it.cell.x * cellSize + x,
-                    it.cell.y * cellSize + y,
-                    cellSize,
-                    cellSize,
-                    it.piece!!
+                PaddingView(
+                    PieceView(
+                        it.cell.x * cellSize + x,
+                        it.cell.y * cellSize + y,
+                        cellSize,
+                        cellSize,
+                        it.piece!!
+                    ),
+                    piecePadding
                 )
             }
     }

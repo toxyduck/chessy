@@ -1,10 +1,8 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.Board
-import io.chessy.tool.Move
+import io.chessy.tool.*
 import io.chessy.tool.animator.MoveAnimator
 import io.chessy.tool.interpolator.LinearInterpolator
-import io.chessy.tool.opposite
 import io.chessy.tool.primitive.Point
 import java.awt.Color
 import kotlin.math.min
@@ -14,7 +12,7 @@ class GameView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
-    board: Board
+    private val board: Board
 ) : ViewGroup<GameView.GameViewAction>() {
 
     class GameViewAction(val currentBoard: Board, val move: Move)
@@ -52,9 +50,13 @@ class GameView(
         }
     }
 
+    override fun copy(x: Int, y: Int, width: Int, height: Int): View {
+        return GameView(x, y, width, height, board)
+    }
+
     private fun move(currentBoard: Board, move: Move) {
         val staticPieces = currentBoard.filter(listOf(move.from))
-        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, staticPieces)))
+        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, PIECE_PADDING, staticPieces)))
         val pieceView = PieceView(
             x + move.from.x * cellSize,
             y + move.from.y * cellSize,
@@ -64,7 +66,7 @@ class GameView(
         )
         val animator = MoveAnimator(
             LinearInterpolator,
-            pieceView,
+            PaddingView(pieceView, PIECE_PADDING),
             MOVE_DURATION,
             Point(x + move.to.x * cellSize, y + move.to.y * cellSize)
         )
@@ -74,7 +76,7 @@ class GameView(
     private fun castleMove(currentBoard: Board, move: Move) {
         move.rookCastleMove()?.let { rookMove ->
             val staticPieces = currentBoard.filter(listOf(move.from, rookMove.from))
-            addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, staticPieces)))
+            addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, PIECE_PADDING, staticPieces)))
             val kingView = PieceView(
                 x + move.from.x * cellSize,
                 y + move.from.y * cellSize,
@@ -91,13 +93,13 @@ class GameView(
             )
             val rookAnimator = MoveAnimator(
                 LinearInterpolator,
-                rookView,
+                PaddingView(rookView, PIECE_PADDING),
                 MOVE_DURATION,
                 Point(x + rookMove.to.x * cellSize, y + rookMove.to.y * cellSize)
             )
             val kingAnimator = MoveAnimator(
                 LinearInterpolator,
-                kingView,
+                PaddingView(kingView, PIECE_PADDING),
                 MOVE_DURATION,
                 Point(x + move.to.x * cellSize, y + move.to.y * cellSize)
             )
@@ -106,10 +108,10 @@ class GameView(
     }
 
     companion object {
+        private const val PIECE_PADDING = 24
         private const val MOVE_DURATION = 500 / 16
         private val blackColor = Color.decode("#B27B41")
         private val whiteColor = Color.decode("#DEC496")
         private val redColor = Color.decode("#B24341")
     }
-
 }
