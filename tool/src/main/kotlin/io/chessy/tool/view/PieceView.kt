@@ -43,7 +43,7 @@ class PieceView(
     }
 
     private fun Piece.pathToImage(): URL {
-        return PieceView::class.java.getResource("/${name()}${side()}New.png")!!
+        return PieceView::class.java.getResource("/${name()}${side()}V2.png")!!
     }
 
     private fun Piece.side(): String {
