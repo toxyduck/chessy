@@ -21,16 +21,18 @@ class Controller(
 
         val gameView: ViewGroup<GameView.GameViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
         var currentBoard = startBoard
-        moves.take(10).forEach { move ->
-            println("Rendered move $move}")
-            gameView.produceAction(GameView.GameViewAction(currentBoard, move))
-            while (!gameView.isFinish()) {
-                // important to use this pixel format
-                val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
-                gameView.draw(frame.graphics)
-                frameListener(frame)
+        moves
+//            .take(10)
+            .forEach { move ->
+                println("Rendered move $move}")
+                gameView.produceAction(GameView.GameViewAction(currentBoard, move))
+                while (!gameView.isFinish()) {
+                    // important to use this pixel format
+                    val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
+                    gameView.draw(frame.graphics)
+                    frameListener(frame)
+                }
+                currentBoard = currentBoard.mutate(move)
             }
-            currentBoard = currentBoard.mutate(move)
-        }
     }
 }
