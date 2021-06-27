@@ -67,7 +67,6 @@ class RootView(
     }
 
     companion object {
-
         private const val FONT_NAME = "SansSerif"
         private const val FONT_SIZE = 32
         private const val FONT_STYLE = Font.PLAIN
@@ -81,6 +80,6 @@ class RootView(
 
         private val whiteColor = Color(0x88FFFFFF.toInt(), true)
         private val grayColor = Color.decode("#272522")
-        private val backgroundColor = Color.decode("#4D4D4D")
+        private val backgroundColor = Color.decode("#000000")
     }
 }
