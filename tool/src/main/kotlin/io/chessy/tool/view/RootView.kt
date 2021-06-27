@@ -14,8 +14,8 @@ class RootView(
     private val board: Board,
 ) : ViewGroup<GameView.GameViewAction>() {
 
-    private val maxSymbolWidth = CHESS_SYMBOLS.maxOf { SymbolView.measure(graphicsContext, FONT, it).width }
-    private val maxSymbolHeight = CHESS_SYMBOLS.maxOf { SymbolView.measure(graphicsContext, FONT, it).height }
+    private val maxSymbolWidth = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).width }
+    private val maxSymbolHeight = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).height }
     private val borderSize = maxSymbolHeight.coerceAtLeast(maxSymbolWidth) + 2 * GAME_VIEW_PADDING
 
     private val boardSize = width.coerceAtMost(height)
@@ -46,7 +46,9 @@ class RootView(
         )
 
     init {
-        addChild(OnceDrawView(BorderView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, borderViewConfig)))
+        val playerDetailView = PlayerDetailsView(x, y, width, "Ян Непомнящий", 2891, graphicsContext)
+        addChild(OnceDrawView(playerDetailView))
+        addChild(OnceDrawView(BorderView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, graphicsContext, borderViewConfig)))
         addChild(gameView)
     }
 
@@ -65,7 +67,6 @@ class RootView(
     }
 
     companion object {
-
         private const val FONT_NAME = "SansSerif"
         private const val FONT_SIZE = 32
         private const val FONT_STYLE = Font.PLAIN
@@ -79,6 +80,6 @@ class RootView(
 
         private val whiteColor = Color(0x88FFFFFF.toInt(), true)
         private val grayColor = Color.decode("#272522")
-        private val backgroundColor = Color.decode("#4D4D4D")
+        private val backgroundColor = Color.decode("#000000")
     }
 }
