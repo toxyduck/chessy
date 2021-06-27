@@ -14,8 +14,8 @@ class RootView(
     private val board: Board,
 ) : ViewGroup<GameView.GameViewAction>() {
 
-    private val maxSymbolWidth = CHESS_SYMBOLS.maxOf { SymbolView.measure(graphicsContext, FONT, it).width }
-    private val maxSymbolHeight = CHESS_SYMBOLS.maxOf { SymbolView.measure(graphicsContext, FONT, it).height }
+    private val maxSymbolWidth = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).width }
+    private val maxSymbolHeight = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).height }
     private val borderSize = maxSymbolHeight.coerceAtLeast(maxSymbolWidth) + 2 * GAME_VIEW_PADDING
 
     private val boardSize = width.coerceAtMost(height)

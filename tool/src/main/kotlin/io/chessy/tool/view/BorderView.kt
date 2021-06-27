@@ -29,23 +29,23 @@ class BorderView(
         views().forEach { addChild(it) }
     }
 
-    private fun views(): List<SymbolView> {
+    private fun views(): List<TextView> {
         val numberBorder = config.symbolsVertical.mapIndexed { ix, symbol ->
             val yCoord = y + height - config.borderSize - ix * cellSize - cellSize / 2 - config.symbolHeight / 2
             val xCoord = x + config.symbolPadding
-            SymbolView(
+            TextView(
                 x = xCoord,
                 y = yCoord,
-                symbol = symbol,
+                text = symbol.toString(),
                 color = config.color,
                 font = config.font
             )
         }
         val symbolBorder = config.symbolsHorizontal.mapIndexed { ix, symbol ->
-            SymbolView(
+            TextView(
                 x = x + config.borderSize + ix * cellSize + cellSize / 2 - config.symbolWidth / 2,
                 y = width - config.borderSize + config.symbolPadding,
-                symbol = symbol,
+                text = symbol.toString(),
                 color = config.color,
                 font = config.font
             )
