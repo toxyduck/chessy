@@ -3,6 +3,7 @@ package io.chessy.tool.view
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
+import java.awt.font.TextAttribute
 import kotlin.math.max
 
 class PlayerDetailsView(
@@ -53,11 +54,11 @@ class PlayerDetailsView(
             color = textColor,
             font = FONT_FOR_RATING
         )
-        val ratingWithBackground = RoundBackgroundView(ratingBackgroundColor, ratingTextView, 50, 24, 16)
+        val ratingWithBackground = RoundBackgroundView(ratingBackgroundColor, ratingTextView, 50, 24, 12)
         height = 2 * PADDING_VERTICAL + max(avatarView.height, max(nameTextView.height, ratingWithBackground.height))
         val centerY = height / 2
-        val avatarViewX = x + PADDING_HORIZONTAL
-        val nameViewX = avatarViewX + avatarView.width + PADDING_HORIZONTAL
+        val avatarViewX = x + AVATAR_PADDING
+        val nameViewX = avatarViewX + avatarView.width + AVATAR_PADDING
         val ratingViewX = nameViewX + nameTextView.width + PADDING_HORIZONTAL
         addChild(avatarView.move(avatarViewX, centerY - avatarView.height / 2))
         addChild(nameTextView.move(nameViewX, centerY - nameTextView.height / 2))
@@ -65,13 +66,13 @@ class PlayerDetailsView(
     }
 
     companion object {
-        private const val FONT_NAME = "SansSerif"
-        private val FONT_FOR_NAME = Font(FONT_NAME, Font.PLAIN, 32)
-        private val FONT_FOR_RATING = Font(FONT_NAME, Font.PLAIN, 24)
+        private val FONT_FOR_NAME = Font("Gilroy-Bold", Font.PLAIN, 32)
+        private val FONT_FOR_RATING = Font("Gilroy-Regular", Font.PLAIN, 32)
+        private const val AVATAR_PADDING = 40
         private const val PADDING_VERTICAL = 48
         private const val PADDING_HORIZONTAL = 32
         private val textColor = Color.decode("#FFFFFF")
         private val backgroundColor = Color.decode("#4D4D4D")
-        private val ratingBackgroundColor = Color.decode("#000000")
+        private val ratingBackgroundColor = Color.decode("#212121")
     }
 }
