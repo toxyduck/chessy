@@ -9,6 +9,7 @@ import javax.imageio.ImageIO
 class AvatarView(
     override val x: Int,
     override val y: Int,
+    private val iconName: String,
     private val size: Int
 ) : View {
     override val width: Int = size
@@ -25,11 +26,11 @@ class AvatarView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return AvatarView(x, y, size)
+        return AvatarView(x, y, iconName, size)
     }
 
     private fun pathToAvatar(): URL {
-        return PieceView::class.java.getResource("/yan.jpg")!!
+        return PieceView::class.java.getResource("/$iconName")!!
     }
 
 }

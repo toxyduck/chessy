@@ -12,6 +12,7 @@ class PlayerDetailsView(
     override val width: Int,
     private val playerName: String,
     private val playerRating: Int,
+    private val playerIconName: String,
     private val graphicsContext: Graphics
 ) : ViewGroup<Nothing>() {
 
@@ -29,13 +30,14 @@ class PlayerDetailsView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return PlayerDetailsView(x, y, width, playerName, playerRating, graphicsContext)
+        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, graphicsContext)
     }
 
     private fun initViews() {
         val avatarView = AvatarView(
             0,
             0,
+            playerIconName,
             96
         )
         val nameTextView = TextView(

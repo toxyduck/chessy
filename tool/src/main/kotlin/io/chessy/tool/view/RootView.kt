@@ -36,19 +36,24 @@ class RootView(
         symbolsHorizontal = SYMBOLS_HORIZONTAL
     )
 
-    private val gameView: ViewGroup<GameView.GameViewAction> =
+    private val gameView: ViewGroup<GameView.GameViewAction>
+
+    init {
+        val playerDetailViewInit = PlayerDetailsView(0, 0, width, "Магнус Карлсен", 2910, "magnus.jpg", graphicsContext)
+        val playerDetailView2 = playerDetailViewInit.move(0, height - playerDetailViewInit.height)
+        gameView =
         GameView(
             topLeftBoardX + borderSize,
-            topLeftBoardY + borderSize,
+               playerDetailView2.y - boardSize + borderSize, // fix it must be minus border size
             boardSize - borderSize * 2,
             boardSize - borderSize * 2,
             board
         )
-
-    init {
-        val playerDetailView = PlayerDetailsView(x, y, width, "Ян Непомнящий", 2891, graphicsContext)
+        val border = BorderView(topLeftBoardX, gameView.y - borderSize, boardSize, boardSize, graphicsContext, borderViewConfig)
+        val playerDetailView = PlayerDetailsView(0, border.y - playerDetailView2.height, width, "Ян Непомнящий", 2891, "yan.jpg", graphicsContext)
+        addChild(OnceDrawView(playerDetailView2))
         addChild(OnceDrawView(playerDetailView))
-        addChild(OnceDrawView(BorderView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, graphicsContext, borderViewConfig)))
+        addChild(OnceDrawView(border))
         addChild(gameView)
     }
 
