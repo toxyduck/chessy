@@ -2,7 +2,7 @@ package io.chessy
 
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
-import io.chessy.tool.Chessy
+import io.chessy.tool.chess.Chessy
 
 fun main() {
     val httpAsync = "https://lichess.org/game/export/RHxgDZ8q"

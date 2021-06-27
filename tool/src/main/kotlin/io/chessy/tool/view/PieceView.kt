@@ -1,8 +1,8 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.Piece
-import io.chessy.tool.PieceName
-import io.chessy.tool.Side
+import io.chessy.tool.chess.Piece
+import io.chessy.tool.chess.PieceName
+import io.chessy.tool.chess.Side
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.net.URL

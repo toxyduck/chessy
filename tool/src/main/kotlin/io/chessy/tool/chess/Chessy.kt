@@ -1,7 +1,8 @@
-package io.chessy.tool
+package io.chessy.tool.chess
 
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
+import io.chessy.tool.FFmpegVideoMaker
 import io.chessy.tool.controller.Controller
 
 

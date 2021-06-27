@@ -1,6 +1,6 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.Board
+import io.chessy.tool.chess.Board
 import kotlin.math.min
 
 class StaticPiecesView(
@@ -19,7 +19,7 @@ class StaticPiecesView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return StaticPiecesView(x, y, width, height, piecePadding ,board)
+        return StaticPiecesView(x, y, width, height, piecePadding, board)
     }
 
     private fun views(): List<View> {

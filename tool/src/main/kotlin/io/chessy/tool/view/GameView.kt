@@ -1,7 +1,9 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.*
 import io.chessy.tool.animator.MoveAnimator
+import io.chessy.tool.chess.Board
+import io.chessy.tool.chess.Move
+import io.chessy.tool.chess.opposite
 import io.chessy.tool.interpolator.LinearInterpolator
 import io.chessy.tool.primitive.Point
 import java.awt.Color
