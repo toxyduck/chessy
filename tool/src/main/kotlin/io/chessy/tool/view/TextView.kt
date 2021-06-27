@@ -7,23 +7,29 @@ import java.awt.Graphics
 class TextView(
     override val x: Int,
     override val y: Int,
+    private val graphicsContext: Graphics,
     private val text: String,
     private val color: Color,
     private val font: Font
 ) : View {
 
-    override val height: Int = 0
-    override val width: Int = 0
+    override val height: Int
+    override val width: Int
+
+    init {
+        val size = measure(graphicsContext, font, text)
+        height = size.height
+        width = size.width
+    }
 
     override fun draw(graphics: Graphics) {
         graphics.color = color
         graphics.font = font
-        val size = measure(graphics, font, text)
-        graphics.drawString(text, x, (y + size.height))
+        graphics.drawString(text, x, (y + height))
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return TextView(x, y, text, color, font)
+        return TextView(x, y, graphicsContext, text, color, font)
     }
 
     class Size(val width: Int, val height: Int)

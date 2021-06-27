@@ -46,7 +46,9 @@ class RootView(
         )
 
     init {
-        addChild(OnceDrawView(BorderView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, borderViewConfig)))
+        val playerDetailView = PlayerDetailsView(x, y, width, "Ян Непомнящий", 2891, graphicsContext)
+        addChild(OnceDrawView(playerDetailView))
+        addChild(OnceDrawView(BorderView(topLeftBoardX, topLeftBoardY, boardSize, boardSize, graphicsContext, borderViewConfig)))
         addChild(gameView)
     }
 

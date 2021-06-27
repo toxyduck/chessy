@@ -10,11 +10,12 @@ class BorderView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
+    private val graphicsContext: Graphics,
     private val config: Config
 ) : ViewGroup<Nothing>() {
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return BorderView(x, y, width, height, config)
+        return BorderView(x, y, width, height, graphicsContext, config)
     }
 
     override fun draw(graphics: Graphics) {
@@ -36,6 +37,7 @@ class BorderView(
             TextView(
                 x = xCoord,
                 y = yCoord,
+                graphicsContext = graphicsContext,
                 text = symbol.toString(),
                 color = config.color,
                 font = config.font
@@ -45,6 +47,7 @@ class BorderView(
             TextView(
                 x = x + config.borderSize + ix * cellSize + cellSize / 2 - config.symbolWidth / 2,
                 y = width - config.borderSize + config.symbolPadding,
+                graphicsContext = graphicsContext,
                 text = symbol.toString(),
                 color = config.color,
                 font = config.font
