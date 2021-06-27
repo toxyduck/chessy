@@ -48,7 +48,7 @@ data class Cell(val x: Int, val y: Int) {
             if (notationName.length != 2) return null
             val x = getX(notationName[0]) ?: return null
             val y = getY(notationName[1]) ?: return null
-            return Cell(x, y)
+            return Cell(x, 7 - y)
         }
 
         private fun getX(char: Char): Int? {

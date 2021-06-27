@@ -26,7 +26,7 @@ private val realInitialBoardFigures = listOf(
 
 private val realCells = (0 until 64).map { ix ->
     val x = ix % 8
-    val y = 7 - (ix / 8)
+    val y = (ix / 8)
     Cell(x, y)
 }
 
