@@ -10,11 +10,12 @@ class BorderView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
+    private val graphicsContext: Graphics,
     private val config: Config
 ) : ViewGroup<Nothing>() {
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return BorderView(x, y, width, height, config)
+        return BorderView(x, y, width, height, graphicsContext, config)
     }
 
     override fun draw(graphics: Graphics) {
@@ -29,23 +30,25 @@ class BorderView(
         views().forEach { addChild(it) }
     }
 
-    private fun views(): List<SymbolView> {
+    private fun views(): List<TextView> {
         val numberBorder = config.symbolsVertical.mapIndexed { ix, symbol ->
             val yCoord = y + height - config.borderSize - ix * cellSize - cellSize / 2 - config.symbolHeight / 2
             val xCoord = x + config.symbolPadding
-            SymbolView(
+            TextView(
                 x = xCoord,
                 y = yCoord,
-                symbol = symbol,
+                graphicsContext = graphicsContext,
+                text = symbol.toString(),
                 color = config.color,
                 font = config.font
             )
         }
         val symbolBorder = config.symbolsHorizontal.mapIndexed { ix, symbol ->
-            SymbolView(
+            TextView(
                 x = x + config.borderSize + ix * cellSize + cellSize / 2 - config.symbolWidth / 2,
                 y = width - config.borderSize + config.symbolPadding,
-                symbol = symbol,
+                graphicsContext = graphicsContext,
+                text = symbol.toString(),
                 color = config.color,
                 font = config.font
             )

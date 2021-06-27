@@ -1,7 +1,7 @@
 package io.chessy.tool.controller
 
-import io.chessy.tool.chess.Board
-import io.chessy.tool.chess.Move
+import io.chessy.tool.Board
+import io.chessy.tool.Move
 import io.chessy.tool.view.GameView
 import io.chessy.tool.view.RootView
 import io.chessy.tool.view.ViewGroup
@@ -16,7 +16,7 @@ class Controller(
     private val frameListener: ((BufferedImage) -> Unit)
 ) {
     fun startRender() {
-        // костыль
+        FontsLoader.load()
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
         val gameView: ViewGroup<GameView.GameViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
