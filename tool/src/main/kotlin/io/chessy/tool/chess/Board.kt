@@ -3,9 +3,11 @@ package io.chessy.tool.chess
 data class Board(val cells: List<CellWithPiece>) {
 
     fun mutate(move: Move): Board {
-        var piece = cells.find { it.cell == move.from }?.piece
+        val castleMove : Move? =  if (move.isCastleMove) { move.rookCastleMove() } else null
+        val castlePiece: Piece? = castleMove?.piece
+        var piece = move.piece
         var capturedCell: Cell? = null
-        if (piece != null && piece.pieceName == PieceName.Pawn) {
+        if (piece.pieceName == PieceName.Pawn) {
             val isCapture = (move.from.x - move.to.x) != 0
             if (isCapture) {
                 val capturedPiece = cells.find { it.cell == move.to }?.piece
@@ -17,15 +19,16 @@ data class Board(val cells: List<CellWithPiece>) {
                 piece = move.promotionPiece
             }
         }
-        val mutated = this.copy(cells = this.cells.map {
+        return this.copy(cells = this.cells.map {
             when (it.cell) {
                 capturedCell -> it.copy(piece = null)
                 move.from -> it.copy(piece = null)
                 move.to -> it.copy(piece = piece)
+                castleMove?.from -> it.copy(piece = null)
+                castleMove?.to -> it.copy(piece = castlePiece)
                 else -> it
             }
         })
-        return if (move.isCastleMove) move.rookCastleMove()?.let { mutated.mutate(it) } ?: mutated else mutated
     }
 
     fun filter(filter: List<Cell>): Board {
