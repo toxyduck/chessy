@@ -1,7 +1,7 @@
 package io.chessy.tool.controller
 
-import io.chessy.tool.Board
-import io.chessy.tool.Move
+import io.chessy.tool.chess.Board
+import io.chessy.tool.chess.Move
 import io.chessy.tool.view.GameView
 import io.chessy.tool.view.RootView
 import io.chessy.tool.view.ViewGroup

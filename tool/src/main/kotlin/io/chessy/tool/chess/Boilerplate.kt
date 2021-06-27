@@ -1,4 +1,4 @@
-package io.chessy.tool
+package io.chessy.tool.chess
 
 val whitePawn = Piece(PieceName.Pawn, Side.White)
 val blackPawn = Piece(PieceName.Pawn, Side.Black)

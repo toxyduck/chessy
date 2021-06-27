@@ -1,6 +1,6 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.*
+import io.chessy.tool.chess.Board
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
