@@ -85,6 +85,6 @@ class RootView(
 
         private val whiteColor = Color(0x88FFFFFF.toInt(), true)
         private val grayColor = Color.decode("#272522")
-        private val backgroundColor = Color.decode("#000000")
+        private val backgroundColor = Color.decode("#212121")
     }
 }
