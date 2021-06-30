@@ -4,7 +4,7 @@ import io.chessy.tool.animator.MoveAnimator
 import io.chessy.tool.chess.Board
 import io.chessy.tool.chess.Move
 import io.chessy.tool.chess.opposite
-import io.chessy.tool.interpolator.LinearInterpolator
+import io.chessy.tool.interpolator.EaseInSineInterpolator
 import io.chessy.tool.primitive.Point
 import java.awt.Color
 import kotlin.math.min
@@ -67,7 +67,7 @@ class GameView(
             move.piece
         )
         val animator = MoveAnimator(
-            LinearInterpolator,
+            interpolator,
             PaddingView(pieceView, PIECE_PADDING),
             MOVE_DURATION,
             Point(x + move.to.x * cellSize, y + move.to.y * cellSize)
@@ -94,13 +94,13 @@ class GameView(
                 rookMove.piece
             )
             val rookAnimator = MoveAnimator(
-                LinearInterpolator,
+                interpolator,
                 PaddingView(rookView, PIECE_PADDING),
                 MOVE_DURATION,
                 Point(x + rookMove.to.x * cellSize, y + rookMove.to.y * cellSize)
             )
             val kingAnimator = MoveAnimator(
-                LinearInterpolator,
+                interpolator,
                 PaddingView(kingView, PIECE_PADDING),
                 MOVE_DURATION,
                 Point(x + move.to.x * cellSize, y + move.to.y * cellSize)
@@ -115,5 +115,6 @@ class GameView(
         private val blackColor = Color.decode("#B27B41")
         private val whiteColor = Color.decode("#DEC496")
         private val redColor = Color.decode("#B24341")
+        private val interpolator = EaseInSineInterpolator
     }
 }
