@@ -7,8 +7,8 @@ import java.net.URL
 import javax.imageio.ImageIO
 
 class AvatarView(
-    override val x: Int,
-    override val y: Int,
+    override val x: Int = 0,
+    override val y: Int = 0,
     private val iconName: String,
     private val size: Int
 ) : View {

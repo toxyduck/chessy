@@ -7,8 +7,8 @@ import java.awt.font.TextAttribute
 import kotlin.math.max
 
 class PlayerDetailsView(
-    override val x: Int,
-    override val y: Int,
+    override val x: Int = 0,
+    override val y: Int = 0,
     override val width: Int,
     private val playerName: String,
     private val playerRating: Int,
@@ -35,22 +35,16 @@ class PlayerDetailsView(
 
     private fun initViews() {
         val avatarView = AvatarView(
-            0,
-            0,
-            playerIconName,
-            96
+            iconName = playerIconName,
+            size = 96
         )
         val nameTextView = TextView(
-            x = 0,
-            y = 0,
             graphicsContext = graphicsContext,
             text = playerName,
             color = textColor,
             font = FONT_FOR_NAME
         )
         val ratingTextView = TextView(
-            x = 0,
-            y = 0,
             graphicsContext = graphicsContext,
             text = playerRating.toString(),
             color = textColor,

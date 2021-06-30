@@ -22,3 +22,8 @@ fun View.move(x: Float, y: Float): View {
 fun View.resize(width: Int, height: Int): View {
     return copy(width = width, height = height)
 }
+
+inline fun View.moveWithSize(move: (width: Int, height: Int) -> Pair<Int, Int>): View {
+    val (x, y) = move(width, height)
+    return this.move(x, y)
+}

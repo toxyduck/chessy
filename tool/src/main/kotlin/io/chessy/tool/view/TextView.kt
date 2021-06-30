@@ -5,8 +5,8 @@ import java.awt.Font
 import java.awt.Graphics
 
 class TextView(
-    override val x: Int,
-    override val y: Int,
+    override val x: Int = 0,
+    override val y: Int = 0,
     private val graphicsContext: Graphics,
     private val text: String,
     private val color: Color,

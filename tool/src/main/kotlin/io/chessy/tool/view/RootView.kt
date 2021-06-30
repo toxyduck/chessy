@@ -2,7 +2,6 @@ package io.chessy.tool.view
 
 import io.chessy.tool.chess.Board
 import java.awt.Color
-import java.awt.Font
 import java.awt.Graphics
 
 class RootView(
@@ -14,46 +13,33 @@ class RootView(
     private val board: Board,
 ) : ViewGroup<GameView.GameViewAction>() {
 
-    private val maxSymbolWidth = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).width }
-    private val maxSymbolHeight = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).height }
-    private val borderSize = maxSymbolHeight.coerceAtLeast(maxSymbolWidth) + 2 * GAME_VIEW_PADDING
-
-    private val boardSize = width.coerceAtMost(height)
-    private val centerBoardX = width / 2
-    private val centerBoardY = height / 2
-    private val topLeftBoardX = centerBoardX - boardSize / 2
-    private val topLeftBoardY = centerBoardY - boardSize / 2
-
-    private val borderViewConfig = BorderView.Config(
-        borderSize = borderSize,
-        symbolPadding = GAME_VIEW_PADDING,
-        symbolHeight = maxSymbolHeight,
-        symbolWidth = maxSymbolWidth,
-        font = FONT,
-        color = whiteColor,
-        backgroundColor = grayColor,
-        symbolsVertical = SYMBOLS_VERTICAL,
-        symbolsHorizontal = SYMBOLS_HORIZONTAL
-    )
-
     private val gameView: ViewGroup<GameView.GameViewAction>
 
     init {
-        val playerDetailViewInit = PlayerDetailsView(0, 0, width, "Магнус Карлсен", 2910, "magnus.jpg", graphicsContext)
-        val playerDetailView2 = playerDetailViewInit.move(0, height - playerDetailViewInit.height)
-        gameView =
-        GameView(
-            topLeftBoardX + borderSize,
-               playerDetailView2.y - boardSize + borderSize, // fix it must be minus border size
-            boardSize - borderSize * 2,
-            boardSize - borderSize * 2,
-            board
+        val playerDetailView2 = PlayerDetailsView(
+            width = width,
+            playerName = "Магнус Карлсен",
+            playerRating = 2910,
+            playerIconName = "magnus.jpg",
+            graphicsContext = graphicsContext
+        ).moveWithSize { _, viewHeight -> 0 to height - viewHeight }
+        gameView = BorderedGameView(
+            x,
+            playerDetailView2.y - width,
+            width,
+            graphicsContext, board
         )
-        val border = BorderView(topLeftBoardX, gameView.y - borderSize, boardSize, boardSize, graphicsContext, borderViewConfig)
-        val playerDetailView = PlayerDetailsView(0, border.y - playerDetailView2.height, width, "Ян Непомнящий", 2891, "yan.jpg", graphicsContext)
+        val playerDetailView = PlayerDetailsView(
+            x = 0,
+            y = gameView.y - playerDetailView2.height,
+            width = width,
+            playerName =  "Ян Непомнящий",
+            playerRating = 2891,
+            playerIconName = "yan.jpg",
+            graphicsContext = graphicsContext
+        )
         addChild(OnceDrawView(playerDetailView2))
         addChild(OnceDrawView(playerDetailView))
-        addChild(OnceDrawView(border))
         addChild(gameView)
     }
 
@@ -72,19 +58,6 @@ class RootView(
     }
 
     companion object {
-        private const val FONT_NAME = "SansSerif"
-        private const val FONT_SIZE = 32
-        private const val FONT_STYLE = Font.PLAIN
-        private val FONT = Font(FONT_NAME, FONT_STYLE, FONT_SIZE)
-
-        private val SYMBOLS_VERTICAL = ('1' until '9').toList()
-        private val SYMBOLS_HORIZONTAL = ('A' until 'I').toList()
-
-        private val CHESS_SYMBOLS = SYMBOLS_VERTICAL + SYMBOLS_HORIZONTAL
-        private const val GAME_VIEW_PADDING = 8
-
-        private val whiteColor = Color(0x88FFFFFF.toInt(), true)
-        private val grayColor = Color.decode("#272522")
         private val backgroundColor = Color.decode("#212121")
     }
 }
