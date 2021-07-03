@@ -11,7 +11,7 @@ class RootView(
     override val height: Int,
     private val graphicsContext: Graphics,
     private val board: Board,
-) : ViewGroup<GameView.GameViewAction>() {
+) : ViewGroup<RootView.RootViewAction>() {
 
     private val gameView: ViewGroup<GameView.GameViewAction>
 
@@ -43,8 +43,11 @@ class RootView(
         addChild(gameView)
     }
 
-    override fun obtainAction(action: GameView.GameViewAction) {
-        gameView.produceAction(action)
+    override fun obtainAction(action: RootViewAction) {
+        when(action) {
+            is RootViewAction.GameViewMove -> gameView.produceAction(action.move)
+            is RootViewAction.Pause -> finishActionAfterFrames(action.framesCount)
+        }
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
@@ -59,5 +62,10 @@ class RootView(
 
     companion object {
         private val backgroundColor = Color.decode("#212121")
+    }
+
+    sealed class RootViewAction {
+        class GameViewMove(val move: GameView.GameViewAction) : RootViewAction()
+        class Pause(val framesCount: Int) : RootViewAction()
     }
 }

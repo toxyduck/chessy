@@ -20,20 +20,34 @@ class Controller(
         FontsLoader.load()
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
-        val gameView: ViewGroup<GameView.GameViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
+        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
         var currentBoard = startBoard
+        println("Render pause")
+        gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
+        gameView.renderAction()
         moves
-//            .take(10)
+            .take(10)
             .forEach { move ->
                 println("Rendered move $move}")
-                gameView.produceAction(GameView.GameViewAction(currentBoard, move))
-                while (!gameView.isFinish()) {
-                    // important to use this pixel format
-                    val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
-                    gameView.draw(frame.graphics)
-                    frameListener(frame)
-                }
+                gameView.produceAction(RootView.RootViewAction.GameViewMove(GameView.GameViewAction(currentBoard, move)))
+                gameView.renderAction()
                 currentBoard = currentBoard.mutate(move)
             }
+        println("Render pause")
+        gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
+        gameView.renderAction()
+    }
+
+    private fun ViewGroup<*>.renderAction() {
+        while (!isFinish()) {
+            // important to use this pixel format
+            val frame = BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR)
+            draw(frame.graphics)
+            frameListener(frame)
+        }
+    }
+
+    companion object {
+        private const val PAUSE_DURATION = 1000 / 16
     }
 }

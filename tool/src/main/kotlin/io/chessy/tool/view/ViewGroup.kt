@@ -2,30 +2,34 @@ package io.chessy.tool.view
 
 import io.chessy.tool.primitive.ActionView
 import io.chessy.tool.primitive.Finishable
+import io.chessy.tool.primitive.Timer
 import java.awt.Graphics
 
 abstract class ViewGroup<T> : ActionView<T> {
 
-    private var childes: MutableList<ScopedView> = mutableListOf()
+    private val childes: MutableList<ScopedView> = mutableListOf()
 
-    open fun obtainAction(action: T) {
+    private val timers: MutableList<Timer> = mutableListOf()
+
+    protected open fun obtainAction(action: T) {
         // No actions
     }
 
     override fun isFinish(): Boolean {
-        return childes.fold(true) { acc, scopedView ->
-            val view = scopedView.view
-            val isFinishable = view is Finishable
-            acc && (!isFinishable || (view as Finishable).isFinish())
-        }
+        return (childes.map { it.view }.filterIsInstance<Finishable>() + timers)
+            .fold(true) { acc, finishable ->
+                acc && finishable.isFinish()
+            }
     }
 
     override fun draw(graphics: Graphics) {
+        timers.forEach { it.tick() }
         childes.forEach { it.view.draw(graphics) }
     }
 
     override fun produceAction(action: T) {
         removeActionScope()
+        timers.clear()
         obtainAction(action)
     }
 
@@ -39,6 +43,10 @@ abstract class ViewGroup<T> : ActionView<T> {
 
     protected fun addChildesOneAction(vararg views: View) {
         views.forEach { view -> childes.add(ScopedView(view, ViewScope.Action)) }
+    }
+
+    protected fun finishActionAfterFrames(framesCount: Int) {
+        timers.add(Timer(framesCount))
     }
 
     private fun removeActionScope() {

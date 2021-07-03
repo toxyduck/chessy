@@ -23,6 +23,7 @@ class GameView(
 
     init {
         addChild(OnceDrawView(BoardView(x, y, width, height, whiteColor, blackColor)))
+        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, PIECE_PADDING, board)))
     }
 
     override fun obtainAction(action: GameViewAction) {
