@@ -22,7 +22,7 @@ class RootView(
             playerRating = 2910,
             playerIconName = "magnus.jpg",
             graphicsContext = graphicsContext
-        ).moveWithSize { _, viewHeight -> 0 to height - viewHeight }
+        ).moveWithSize { _, viewHeight -> 0 to height - viewHeight - BOTTOM_PADDING }
         gameView = BorderedGameView(
             x,
             playerDetailView2.y - width,
@@ -62,6 +62,7 @@ class RootView(
 
     companion object {
         private val backgroundColor = Color.decode("#212121")
+        private const val BOTTOM_PADDING = 148
     }
 
     sealed class RootViewAction {
