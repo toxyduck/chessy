@@ -3,7 +3,6 @@ package io.chessy.tool.view
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
-import java.awt.font.TextAttribute
 import kotlin.math.max
 
 class PlayerDetailsView(
@@ -55,11 +54,11 @@ class PlayerDetailsView(
         height = 2 * PADDING_VERTICAL + max(avatarView.height, max(nameTextView.height, ratingWithBackground.height))
         val centerY = height / 2
         val avatarViewX = if (inverted) width - AVATAR_PADDING - avatarView.width else x + AVATAR_PADDING
-        val nameViewX = if (inverted) avatarViewX - AVATAR_PADDING - nameTextView.width else avatarViewX + avatarView.width + AVATAR_PADDING
-        val ratingViewX = if (inverted) nameViewX - PADDING_HORIZONTAL - ratingWithBackground.width else nameViewX + nameTextView.width + PADDING_HORIZONTAL
+        val secondViewX = if (inverted) avatarViewX - AVATAR_PADDING - ratingWithBackground.width else avatarViewX + avatarView.width + AVATAR_PADDING
+        val thirdViewX = if (inverted) secondViewX - PADDING_HORIZONTAL - nameTextView.width else secondViewX + nameTextView.width + PADDING_HORIZONTAL
         addChild(avatarView.move(avatarViewX, centerY - avatarView.height / 2))
-        addChild(nameTextView.move(nameViewX, centerY - nameTextView.height / 2))
-        addChild(ratingWithBackground.move(ratingViewX, centerY - ratingWithBackground.height / 2))
+        addChild(nameTextView.move(if (inverted) thirdViewX else secondViewX, centerY - nameTextView.height / 2))
+        addChild(ratingWithBackground.move(if (inverted) secondViewX else thirdViewX, centerY - ratingWithBackground.height / 2))
     }
 
     companion object {
