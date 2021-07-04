@@ -21,6 +21,7 @@ class RootView(
             playerName = "Магнус Карлсен",
             playerRating = 2910,
             playerIconName = "magnus.jpg",
+            inverted = true,
             graphicsContext = graphicsContext
         ).moveWithSize { _, viewHeight -> 0 to height - viewHeight - BOTTOM_PADDING }
         gameView = BorderedGameView(
@@ -36,6 +37,7 @@ class RootView(
             playerName =  "Ян Непомнящий",
             playerRating = 2891,
             playerIconName = "yan.jpg",
+            inverted = false,
             graphicsContext = graphicsContext
         )
         addChild(OnceDrawView(playerDetailView2))

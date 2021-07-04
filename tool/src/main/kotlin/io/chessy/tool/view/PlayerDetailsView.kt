@@ -13,6 +13,7 @@ class PlayerDetailsView(
     private val playerName: String,
     private val playerRating: Int,
     private val playerIconName: String,
+    private val inverted: Boolean,
     private val graphicsContext: Graphics
 ) : ViewGroup<Nothing>() {
 
@@ -30,7 +31,7 @@ class PlayerDetailsView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, graphicsContext)
+        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, inverted, graphicsContext)
     }
 
     private fun initViews() {
@@ -53,9 +54,9 @@ class PlayerDetailsView(
         val ratingWithBackground = RoundBackgroundView(ratingBackgroundColor, ratingTextView, 50, 24, 12)
         height = 2 * PADDING_VERTICAL + max(avatarView.height, max(nameTextView.height, ratingWithBackground.height))
         val centerY = height / 2
-        val avatarViewX = x + AVATAR_PADDING
-        val nameViewX = avatarViewX + avatarView.width + AVATAR_PADDING
-        val ratingViewX = nameViewX + nameTextView.width + PADDING_HORIZONTAL
+        val avatarViewX = if (inverted) width - AVATAR_PADDING - avatarView.width else x + AVATAR_PADDING
+        val nameViewX = if (inverted) avatarViewX - AVATAR_PADDING - nameTextView.width else avatarViewX + avatarView.width + AVATAR_PADDING
+        val ratingViewX = if (inverted) nameViewX - PADDING_HORIZONTAL - ratingWithBackground.width else nameViewX + nameTextView.width + PADDING_HORIZONTAL
         addChild(avatarView.move(avatarViewX, centerY - avatarView.height / 2))
         addChild(nameTextView.move(nameViewX, centerY - nameTextView.height / 2))
         addChild(ratingWithBackground.move(ratingViewX, centerY - ratingWithBackground.height / 2))
