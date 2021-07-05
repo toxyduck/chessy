@@ -36,7 +36,7 @@ class Controller(
                 currentBoard = currentBoard.mutate(move)
             }
         println("Render winner")
-        gameView.produceAction(RootView.RootViewAction.ShowWinner(true))
+        gameView.produceAction(RootView.RootViewAction.ShowWinner(false))
         gameView.renderAction()
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))

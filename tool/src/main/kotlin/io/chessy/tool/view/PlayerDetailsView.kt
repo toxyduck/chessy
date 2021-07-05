@@ -1,5 +1,6 @@
 package io.chessy.tool.view
 
+import io.chessy.tool.animator.AlphaAnimator
 import io.chessy.tool.animator.ColorAnimator
 import io.chessy.tool.interpolator.EaseInSineInterpolator
 import java.awt.Color
@@ -24,6 +25,11 @@ class PlayerDetailsView(
     override var height: Int = 0
     private set
 
+    //refactor it
+    private var thirdViewX = 0
+    private var centerY = 0
+    private var ratingWidth = 0
+
     init {
         initViews()
     }
@@ -38,12 +44,22 @@ class PlayerDetailsView(
             val animator = ColorAnimator(
                 EaseInSineInterpolator,
                 animatedView,
-                256 / 16,
+                WINNER_ANIMATION_DURATION,
                 0x4D4D4D,
-                0xBE8400
+                0XCD9C47
             ) { color, view -> view.recolor(color) }
             addChildOneAction(animator, z = 0)
         }
+        val winnerTextView = TextView(
+            graphicsContext = graphicsContext,
+            text = "ВЫИГРАЛ",
+            color = winnerColor,
+            font = FONT_FOR_NAME
+        )
+        val winnerView = RoundBackgroundView(textColor, winnerTextView, 0, 24, 12)
+        val winnerX = if (inverted) thirdViewX - PADDING_HORIZONTAL - winnerView.width else thirdViewX + ratingWidth + PADDING_HORIZONTAL
+        val movedWinnerView = winnerView.move(winnerX, centerY - winnerView.height / 2)
+        addChildOneAction(AlphaAnimator(EaseInSineInterpolator, AlphaView(movedWinnerView, 0f), WINNER_ANIMATION_DURATION))
     }
 
     private fun initViews() {
@@ -65,24 +81,16 @@ class PlayerDetailsView(
         )
         val ratingWithBackground = RoundBackgroundView(ratingBackgroundColor, ratingTextView, 50, 24, 12)
         height = 2 * PADDING_VERTICAL + max(avatarView.height, max(nameTextView.height, ratingWithBackground.height))
-        val centerY = y + height / 2
+        centerY = y + height / 2
         val avatarViewX = if (inverted) width - AVATAR_PADDING - avatarView.width else x + AVATAR_PADDING
         val secondViewX = if (inverted) avatarViewX - AVATAR_PADDING - ratingWithBackground.width else avatarViewX + avatarView.width + AVATAR_PADDING
-        val thirdViewX = if (inverted) secondViewX - PADDING_HORIZONTAL - nameTextView.width else secondViewX + nameTextView.width + PADDING_HORIZONTAL
+        thirdViewX = if (inverted) secondViewX - PADDING_HORIZONTAL - nameTextView.width else secondViewX + nameTextView.width + PADDING_HORIZONTAL
         val fillView = FillView(x, y, width, height, backgroundColor)
+        ratingWidth = ratingWithBackground.width
         addChild(fillView, BACKGROUND_TAG, z = 0)
         addChild(OnceDrawView(avatarView.move(avatarViewX, centerY - avatarView.height / 2)))
         addChild(nameTextView.move(if (inverted) thirdViewX else secondViewX, centerY - nameTextView.height / 2))
         addChild(ratingWithBackground.move(if (inverted) secondViewX else thirdViewX, centerY - ratingWithBackground.height / 2))
-        val winnerTextView = TextView(
-            graphicsContext = graphicsContext,
-            text = "ВЫИГРАЛ",
-            color = winnerColor,
-            font = FONT_FOR_NAME
-        )
-        val winnerView = RoundBackgroundView(textColor, winnerTextView, 0, 24, 12)
-        val winnerX = if (inverted) thirdViewX - PADDING_HORIZONTAL - winnerView.width else thirdViewX + ratingWithBackground.width + PADDING_HORIZONTAL
-        addChild(winnerView.move(winnerX, centerY - winnerView.height / 2))
     }
 
     companion object {
@@ -95,5 +103,6 @@ class PlayerDetailsView(
         private val ratingBackgroundColor = Color.decode("#212121")
         private val winnerColor = Color.decode("#BE8400")
         private const val BACKGROUND_TAG = "background_tag"
+        private const val WINNER_ANIMATION_DURATION = 256 / 16
     }
 }
