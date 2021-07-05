@@ -18,12 +18,12 @@ class RootView(
     init {
         val playerDetailView2 = PlayerDetailsView(
             width = width,
-            playerName = "Магнус Карлсен",
-            playerRating = 2910,
-            playerIconName = "magnus.jpg",
+            playerName = "Гарри Каспаров",
+            playerRating = 2812,
+            playerIconName = "kasparov.jpg",
             inverted = true,
             graphicsContext = graphicsContext
-        ).moveWithSize { _, viewHeight -> 0 to height - viewHeight - BOTTOM_PADDING }
+        ).moveWithSize { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
         gameView = BorderedGameView(
             x,
             playerDetailView2.y - width,
@@ -31,18 +31,29 @@ class RootView(
             graphicsContext, board
         )
         val playerDetailView = PlayerDetailsView(
-            x = 0,
+            x = x,
             y = gameView.y - playerDetailView2.height,
             width = width,
-            playerName =  "Ян Непомнящий",
-            playerRating = 2891,
-            playerIconName = "yan.jpg",
+            playerName =  "Веселин Топалов",
+            playerRating = 2700,
+            playerIconName = "topalov.jpg",
             inverted = false,
             graphicsContext = graphicsContext
         )
+        val eventView = EventDetailsView(
+            x = x,
+            width = width,
+            event = "Турнир Вейк-ан-Зее",
+            tournament = "Группа A",
+            date = "16 января 1999 года",
+            graphicsContext = graphicsContext
+        ).moveWithSize { _, height ->
+            x to playerDetailView.y - height
+        }
         addChild(OnceDrawView(playerDetailView2))
         addChild(OnceDrawView(playerDetailView))
         addChild(gameView)
+        addChild(OnceDrawView(eventView))
     }
 
     override fun obtainAction(action: RootViewAction) {
