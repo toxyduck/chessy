@@ -14,9 +14,10 @@ class RootView(
 ) : ViewGroup<RootView.RootViewAction>() {
 
     private val gameView: ViewGroup<GameView.GameViewAction>
-
+    private val blackDetailView: PlayerDetailsView
+    private val whiteDetailView: PlayerDetailsView
     init {
-        val playerDetailView2 = PlayerDetailsView(
+        whiteDetailView = PlayerDetailsView(
             width = width,
             playerName = "Гарри Каспаров",
             playerRating = 2812,
@@ -24,16 +25,16 @@ class RootView(
             inverted = true,
             backgroundColor = detailsViewBackgroundColor,
             graphicsContext = graphicsContext
-        ).moveWithSize { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
+        ).moveWithSizeCast { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
         gameView = BorderedGameView(
             x,
-            playerDetailView2.y - width,
+            whiteDetailView.y - width,
             width,
             graphicsContext, board
         )
-        val playerDetailView = PlayerDetailsView(
+        blackDetailView = PlayerDetailsView(
             x = x,
-            y = gameView.y - playerDetailView2.height,
+            y = gameView.y - whiteDetailView.height,
             width = width,
             playerName =  "Веселин Топалов",
             playerRating = 2700,
@@ -50,10 +51,10 @@ class RootView(
             date = "16 января 1999 года",
             graphicsContext = graphicsContext
         ).moveWithSize { _, height ->
-            x to playerDetailView.y - height
+            x to blackDetailView.y - height
         }
-        addChild(OnceDrawView(playerDetailView2))
-        addChild(OnceDrawView(playerDetailView))
+        addChild(whiteDetailView)
+        addChild(blackDetailView)
         addChild(gameView)
         addChild(OnceDrawView(eventView))
     }
@@ -62,7 +63,7 @@ class RootView(
         when(action) {
             is RootViewAction.GameViewMove -> gameView.produceAction(action.move)
             is RootViewAction.Pause -> finishActionAfterFrames(action.framesCount)
-            is RootViewAction.ShowWinner ->
+            is RootViewAction.ShowWinner -> showWinner(action.isBlack)
         }
     }
 
@@ -74,6 +75,10 @@ class RootView(
         graphics.color = backgroundColor
         graphics.fillRect(x, y, width, height)
         super.draw(graphics)
+    }
+
+    private fun showWinner(isBlack: Boolean) {
+        if (isBlack) blackDetailView.produceAction(ShowWinner) else whiteDetailView.produceAction(ShowWinner)
     }
 
     companion object {
