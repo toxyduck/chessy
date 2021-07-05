@@ -74,6 +74,15 @@ class PlayerDetailsView(
         addChild(OnceDrawView(avatarView.move(avatarViewX, centerY - avatarView.height / 2)))
         addChild(nameTextView.move(if (inverted) thirdViewX else secondViewX, centerY - nameTextView.height / 2))
         addChild(ratingWithBackground.move(if (inverted) secondViewX else thirdViewX, centerY - ratingWithBackground.height / 2))
+        val winnerTextView = TextView(
+            graphicsContext = graphicsContext,
+            text = "ВЫИГРАЛ",
+            color = winnerColor,
+            font = FONT_FOR_NAME
+        )
+        val winnerView = RoundBackgroundView(textColor, winnerTextView, 0, 24, 12)
+        val winnerX = if (inverted) thirdViewX - PADDING_HORIZONTAL - winnerView.width else thirdViewX + ratingWithBackground.width + PADDING_HORIZONTAL
+        addChild(winnerView.move(winnerX, centerY - winnerView.height / 2))
     }
 
     companion object {
@@ -84,6 +93,7 @@ class PlayerDetailsView(
         private const val PADDING_HORIZONTAL = 32
         private val textColor = Color.decode("#FFFFFF")
         private val ratingBackgroundColor = Color.decode("#212121")
+        private val winnerColor = Color.decode("#BE8400")
         private const val BACKGROUND_TAG = "background_tag"
     }
 }

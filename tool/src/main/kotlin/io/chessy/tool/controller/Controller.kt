@@ -18,6 +18,8 @@ class Controller(
 ) {
     fun startRender() {
         FontsLoader.load()
+        System.setProperty("awt.useSystemAAFontSettings","on")
+
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
         val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
@@ -34,7 +36,7 @@ class Controller(
                 currentBoard = currentBoard.mutate(move)
             }
         println("Render winner")
-        gameView.produceAction(RootView.RootViewAction.ShowWinner(false))
+        gameView.produceAction(RootView.RootViewAction.ShowWinner(true))
         gameView.renderAction()
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
