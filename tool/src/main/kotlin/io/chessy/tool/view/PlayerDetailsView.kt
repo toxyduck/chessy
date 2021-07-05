@@ -13,6 +13,7 @@ class PlayerDetailsView(
     private val playerRating: Int,
     private val playerIconName: String,
     private val inverted: Boolean,
+    private val backgroundColor: Color,
     private val graphicsContext: Graphics
 ) : ViewGroup<Nothing>() {
 
@@ -30,7 +31,11 @@ class PlayerDetailsView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, inverted, graphicsContext)
+        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, inverted, backgroundColor, graphicsContext)
+    }
+
+    fun recolor(color: Color): PlayerDetailsView {
+        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, inverted, color, graphicsContext)
     }
 
     private fun initViews() {
@@ -68,7 +73,6 @@ class PlayerDetailsView(
         private const val PADDING_VERTICAL = 48
         private const val PADDING_HORIZONTAL = 32
         private val textColor = Color.decode("#FFFFFF")
-        private val backgroundColor = Color.decode("#4D4D4D")
         private val ratingBackgroundColor = Color.decode("#212121")
     }
 }

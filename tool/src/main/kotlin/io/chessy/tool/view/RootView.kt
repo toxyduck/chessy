@@ -22,6 +22,7 @@ class RootView(
             playerRating = 2812,
             playerIconName = "kasparov.jpg",
             inverted = true,
+            backgroundColor = detailsViewBackgroundColor,
             graphicsContext = graphicsContext
         ).moveWithSize { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
         gameView = BorderedGameView(
@@ -38,6 +39,7 @@ class RootView(
             playerRating = 2700,
             playerIconName = "topalov.jpg",
             inverted = false,
+            backgroundColor = detailsViewBackgroundColor,
             graphicsContext = graphicsContext
         )
         val eventView = EventDetailsView(
@@ -60,6 +62,7 @@ class RootView(
         when(action) {
             is RootViewAction.GameViewMove -> gameView.produceAction(action.move)
             is RootViewAction.Pause -> finishActionAfterFrames(action.framesCount)
+            is RootViewAction.ShowWinner ->
         }
     }
 
@@ -76,10 +79,12 @@ class RootView(
     companion object {
         private val backgroundColor = Color.decode("#212121")
         private const val BOTTOM_PADDING = 148
+        private val detailsViewBackgroundColor = Color.decode("#4D4D4D")
     }
 
     sealed class RootViewAction {
         class GameViewMove(val move: GameView.GameViewAction) : RootViewAction()
         class Pause(val framesCount: Int) : RootViewAction()
+        class ShowWinner(val isBlack: Boolean) : RootViewAction()
     }
 }
