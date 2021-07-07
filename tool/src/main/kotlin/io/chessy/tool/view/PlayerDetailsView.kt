@@ -8,7 +8,9 @@ import java.awt.Font
 import java.awt.Graphics
 import kotlin.math.max
 
-typealias ShowWinner = Unit
+enum class GameResult {
+    WIN, DRAW
+}
 
 class PlayerDetailsView(
     override val x: Int = 0,
@@ -20,7 +22,7 @@ class PlayerDetailsView(
     private val inverted: Boolean,
     private val backgroundColor: Color,
     private val graphicsContext: Graphics
-) : ViewGroup<ShowWinner>() {
+) : ViewGroup<GameResult>() {
 
     override var height: Int = 0
     private set
@@ -38,22 +40,27 @@ class PlayerDetailsView(
         return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, inverted, backgroundColor, graphicsContext)
     }
 
-    override fun obtainAction(action: ShowWinner) {
+    override fun obtainAction(action: GameResult) {
         val backgroundView = removeViewSafe<FillView>(BACKGROUND_TAG)
+        val fromColor = 0x4D4D4D
+        val (toColor, text) = when(action) {
+            GameResult.WIN -> 0XCD9C47 to "ВЫИГРАЛ"
+            GameResult.DRAW -> 0X969696 to "НИЧЬЯ"
+        }
         backgroundView?.let { animatedView ->
             val animator = ColorAnimator(
                 EaseInSineInterpolator,
                 animatedView,
                 WINNER_ANIMATION_DURATION,
-                0x4D4D4D,
-                0XCD9C47
+                fromColor,
+                toColor
             ) { color, view -> view.recolor(color) }
             addChildOneAction(animator, z = 0)
         }
         val winnerTextView = TextView(
             graphicsContext = graphicsContext,
-            text = "ВЫИГРАЛ",
-            color = winnerColor,
+            text = text,
+            color = if (action == GameResult.WIN) winnerColor else drawColor,
             font = FONT_FOR_NAME
         )
         val winnerView = RoundBackgroundView(textColor, winnerTextView, 0, 24, 12)
@@ -102,6 +109,7 @@ class PlayerDetailsView(
         private val textColor = Color.decode("#FFFFFF")
         private val ratingBackgroundColor = Color.decode("#212121")
         private val winnerColor = Color.decode("#BE8400")
+        private val drawColor = Color.decode("#000000")
         private const val BACKGROUND_TAG = "background_tag"
         private const val WINNER_ANIMATION_DURATION = 256 / 16
     }

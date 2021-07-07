@@ -15,17 +15,17 @@ class RootView(
 
     private val gameView: ViewGroup<GameView.GameViewAction>
     private val blackDetailView: PlayerDetailsView
-    private val whiteDetailView: PlayerDetailsView
+    private val whiteDetailView: PlayerDetailsView = PlayerDetailsView(
+        width = width,
+        playerName = "Гарри Каспаров",
+        playerRating = 2812,
+        playerIconName = "kasparov.jpg",
+        inverted = true,
+        backgroundColor = detailsViewBackgroundColor,
+        graphicsContext = graphicsContext
+    ).moveWithSizeCast { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
+
     init {
-        whiteDetailView = PlayerDetailsView(
-            width = width,
-            playerName = "Гарри Каспаров",
-            playerRating = 2812,
-            playerIconName = "kasparov.jpg",
-            inverted = true,
-            backgroundColor = detailsViewBackgroundColor,
-            graphicsContext = graphicsContext
-        ).moveWithSizeCast { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
         gameView = BorderedGameView(
             x,
             whiteDetailView.y - width,
@@ -63,7 +63,7 @@ class RootView(
         when(action) {
             is RootViewAction.GameViewMove -> gameView.produceAction(action.move)
             is RootViewAction.Pause -> finishActionAfterFrames(action.framesCount)
-            is RootViewAction.ShowWinner -> showWinner(action.isBlack)
+            is RootViewAction.ShowWinner -> showWinner(action.result)
         }
     }
 
@@ -77,8 +77,15 @@ class RootView(
         super.draw(graphics)
     }
 
-    private fun showWinner(isBlack: Boolean) {
-        if (isBlack) blackDetailView.produceAction(ShowWinner) else whiteDetailView.produceAction(ShowWinner)
+    private fun showWinner(gameResult: GameResult) {
+        when(gameResult) {
+            GameResult.BLACK_WIN -> blackDetailView.produceAction(io.chessy.tool.view.GameResult.WIN)
+            GameResult.WHITE_WIN -> whiteDetailView.produceAction(io.chessy.tool.view.GameResult.WIN)
+            GameResult.DRAW -> {
+                blackDetailView.produceAction(io.chessy.tool.view.GameResult.DRAW)
+                whiteDetailView.produceAction(io.chessy.tool.view.GameResult.DRAW)
+            }
+        }
     }
 
     companion object {
@@ -90,6 +97,12 @@ class RootView(
     sealed class RootViewAction {
         class GameViewMove(val move: GameView.GameViewAction) : RootViewAction()
         class Pause(val framesCount: Int) : RootViewAction()
-        class ShowWinner(val isBlack: Boolean) : RootViewAction()
+        class ShowWinner(val result: GameResult) : RootViewAction()
+    }
+
+    enum class GameResult {
+        BLACK_WIN,
+        WHITE_WIN,
+        DRAW
     }
 }

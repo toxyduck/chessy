@@ -28,7 +28,7 @@ class Controller(
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
         gameView.renderAction()
         moves
-            .take(10)
+            .take(3)
             .forEach { move ->
                 println("Rendered move $move}")
                 gameView.produceAction(RootView.RootViewAction.GameViewMove(GameView.GameViewAction(currentBoard, move)))
@@ -36,7 +36,7 @@ class Controller(
                 currentBoard = currentBoard.mutate(move)
             }
         println("Render winner")
-        gameView.produceAction(RootView.RootViewAction.ShowWinner(false))
+        gameView.produceAction(RootView.RootViewAction.ShowWinner(RootView.GameResult.DRAW))
         gameView.renderAction()
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
