@@ -23,6 +23,31 @@ class RootView(
         paddingHorizontal = 32
     )
 
+    val playerDetailsViewConfig = PlayerDetailsView.Config(
+        fontName = Font("Gilroy-Bold", Font.PLAIN, 32),
+        fontRating = Font("Gilroy-Regular", Font.PLAIN, 32),
+        textColor = Color.decode("#FFFFFF"),
+        avatarPadding = 40,
+        otherViewsPaddingHorizontal = 32,
+        paddingVertical = 48,
+        winnerTextColor = Color.decode("#BE8400"),
+        drawTextColor = Color.decode("#000000"),
+        resultAnimationDuration = 256 / 16,
+        ratingBackgroundColor = Color.decode("#212121"),
+        ratingRadius = 50,
+        ratingPaddingHorizontal = 24,
+        ratingPaddingVertical = 12,
+        resultViewBackgroundColor = Color.decode("#FFFFFF"),
+        backgroundColorHex = 0x4D4D4D,
+        winnerBackgroundColorHex = 0XCD9C47,
+        drawBackgroundColorHex = 0X969696,
+        resultViewPaddingHorizontal = 24,
+        resultViewPaddingVertical = 12,
+        winnerText = "ВЫИГРАЛ",
+        drawText = "НИЧЬЯ",
+        avatarSize = 96
+    )
+
     private val gameView: ViewGroup<GameView.GameViewAction>
     private val blackDetailView: PlayerDetailsView
     private val whiteDetailView: PlayerDetailsView = PlayerDetailsView(
@@ -31,7 +56,7 @@ class RootView(
         playerRating = 2812,
         playerIconName = "kasparov.jpg",
         inverted = true,
-        backgroundColor = detailsViewBackgroundColor,
+        config = playerDetailsViewConfig,
         graphicsContext = graphicsContext
     ).moveWithSizeCast { _, viewHeight -> x to height - viewHeight - BOTTOM_PADDING }
 
@@ -50,7 +75,7 @@ class RootView(
             playerRating = 2700,
             playerIconName = "topalov.jpg",
             inverted = false,
-            backgroundColor = detailsViewBackgroundColor,
+            config = playerDetailsViewConfig,
             graphicsContext = graphicsContext
         )
         val eventView = EventDetailsView(
