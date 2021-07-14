@@ -2,6 +2,7 @@ package io.chessy.tool.view
 
 import io.chessy.tool.chess.Board
 import java.awt.Color
+import java.awt.Font
 import java.awt.Graphics
 
 class RootView(
@@ -12,6 +13,15 @@ class RootView(
     private val graphicsContext: Graphics,
     private val board: Board,
 ) : ViewGroup<RootView.RootViewAction>() {
+
+    val eventDetailsViewConfig = EventDetailsView.Config(
+        fontEvent = Font("Gilroy-Bold", Font.PLAIN, 32),
+        fontTournament = Font("Gilroy-Medium", Font.PLAIN, 32),
+        fontDate = Font("Gilroy-Regular", Font.PLAIN, 32),
+        textColor = Color.decode("#FFFFFF"),
+        paddingVertical = 32,
+        paddingHorizontal = 32
+    )
 
     private val gameView: ViewGroup<GameView.GameViewAction>
     private val blackDetailView: PlayerDetailsView
@@ -49,6 +59,7 @@ class RootView(
             event = "Турнир Вейк-ан-Зее",
             tournament = "Группа A",
             date = "16 января 1999 года",
+            config = eventDetailsViewConfig,
             graphicsContext = graphicsContext
         ).moveWithSize { _, height ->
             x to blackDetailView.y - height

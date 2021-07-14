@@ -11,32 +11,33 @@ class EventDetailsView(
     private val event: String,
     private val tournament: String,
     private val date: String,
+    private val config: Config,
     private val graphicsContext: Graphics
 ) : ViewGroup<Nothing>() {
 
     override val height: Int
 
     init {
-        val viewX = x + PADDING_HORIZONTAL
-        val eventView = TextView(viewX, y, graphicsContext, event, textColor, FONT_EVENT)
-        val tournamentView = TextView(viewX, eventView.y + eventView.height + PADDING_VERTICAL, graphicsContext, tournament, textColor, FONT_TOURNAMENT)
-        val dateView = TextView(viewX, tournamentView.y + tournamentView.height + PADDING_VERTICAL, graphicsContext, date, textColor, FONT_DATE)
+        val viewX = x + config.paddingHorizontal
+        val eventView = TextView(viewX, y, graphicsContext, event, config.textColor, config.fontEvent)
+        val tournamentView = TextView(viewX, eventView.y + eventView.height + config.paddingVertical, graphicsContext, tournament, config.textColor, config.fontTournament)
+        val dateView = TextView(viewX, tournamentView.y + tournamentView.height + config.paddingVertical, graphicsContext, date, config.textColor, config.fontDate)
         addChild(eventView)
         addChild(tournamentView)
         addChild(dateView)
-        height = dateView.y + dateView.height - y + PADDING_VERTICAL
+        height = dateView.y + dateView.height - y + config.paddingVertical
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return EventDetailsView(x, y, width, event, tournament, date, graphicsContext)
+        return EventDetailsView(x, y, width, event, tournament, date, config, graphicsContext)
     }
 
-    companion object {
-        private val FONT_EVENT= Font("Gilroy-Bold", Font.PLAIN, 32)
-        private val FONT_TOURNAMENT = Font("Gilroy-Medium", Font.PLAIN, 32)
-        private val FONT_DATE = Font("Gilroy-Regular", Font.PLAIN, 32)
-        private val textColor = Color.decode("#FFFFFF")
-        private const val PADDING_VERTICAL = 32
-        private const val PADDING_HORIZONTAL = 32
-    }
+    class Config(
+        val fontEvent: Font,
+        val fontTournament: Font,
+        val fontDate: Font,
+        val textColor: Color,
+        val paddingVertical: Int,
+        val paddingHorizontal: Int
+    )
 }
