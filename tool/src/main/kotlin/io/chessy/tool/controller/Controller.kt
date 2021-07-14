@@ -3,6 +3,7 @@ package io.chessy.tool.controller
 import io.chessy.tool.FontsLoader
 import io.chessy.tool.chess.Board
 import io.chessy.tool.chess.Move
+import io.chessy.tool.rootViewConfig
 import io.chessy.tool.view.GameView
 import io.chessy.tool.view.RootView
 import io.chessy.tool.view.ViewGroup
@@ -22,7 +23,7 @@ class Controller(
 
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
-        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
+        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard, rootViewConfig)
         var currentBoard = startBoard
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))

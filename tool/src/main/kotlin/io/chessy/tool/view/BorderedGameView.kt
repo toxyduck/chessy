@@ -10,12 +10,15 @@ class BorderedGameView(
     override val y: Int,
     override val width: Int,
     private val graphicsContext: Graphics,
-    private val board: Board
+    private val board: Board,
+    private val config: Config
 ) : ViewGroup<GameView.GameViewAction>() {
 
-    private val maxSymbolWidth = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).width }
-    private val maxSymbolHeight = CHESS_SYMBOLS.maxOf { TextView.measure(graphicsContext, FONT, it.toString()).height }
-    private val borderSize = maxSymbolHeight.coerceAtLeast(maxSymbolWidth) + 2 * GAME_VIEW_PADDING
+    private val chessSymbols = config.symbolsVertical + config.symbolsHorizontal
+
+    private val maxSymbolWidth = chessSymbols.maxOf { TextView.measure(graphicsContext, config.borderFont, it.toString()).width }
+    private val maxSymbolHeight = chessSymbols.maxOf { TextView.measure(graphicsContext, config.borderFont, it.toString()).height }
+    private val borderSize = maxSymbolHeight.coerceAtLeast(maxSymbolWidth) + 2 * config.gameViewPadding
 
     override val height: Int
         get() = width
@@ -24,14 +27,14 @@ class BorderedGameView(
 
     private val borderViewConfig = BorderView.Config(
         borderSize = borderSize,
-        symbolPadding = GAME_VIEW_PADDING,
+        symbolPadding = config.gameViewPadding,
         symbolHeight = maxSymbolHeight,
         symbolWidth = maxSymbolWidth,
-        font = FONT,
-        color = whiteColor,
-        backgroundColor = grayColor,
-        symbolsVertical = SYMBOLS_VERTICAL,
-        symbolsHorizontal = SYMBOLS_HORIZONTAL
+        font = config.borderFont,
+        color = config.symbolsColor,
+        backgroundColor = config.borderColor,
+        symbolsVertical = config.symbolsVertical,
+        symbolsHorizontal = config.symbolsHorizontal
     )
 
     private val gameView: ViewGroup<GameView.GameViewAction>
@@ -43,7 +46,8 @@ class BorderedGameView(
                 y + borderSize,
                 boardSize - borderSize * 2,
                 boardSize - borderSize * 2,
-                board
+                board,
+                config.gameViewConfig
             )
         val border = BorderView(x, gameView.y - borderSize, boardSize, boardSize, graphicsContext, borderViewConfig)
         addChild(OnceDrawView(border))
@@ -55,22 +59,16 @@ class BorderedGameView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return BorderedGameView(x, y, width, graphicsContext, board)
+        return BorderedGameView(x, y, width, graphicsContext, board, config)
     }
 
-    companion object {
-        private const val FONT_NAME = "SansSerif"
-        private const val FONT_SIZE = 32
-        private const val FONT_STYLE = Font.PLAIN
-        private val FONT = Font(FONT_NAME, FONT_STYLE, FONT_SIZE)
-
-        private val SYMBOLS_VERTICAL = ('1' until '9').toList()
-        private val SYMBOLS_HORIZONTAL = ('A' until 'I').toList()
-
-        private val CHESS_SYMBOLS = SYMBOLS_VERTICAL + SYMBOLS_HORIZONTAL
-        private const val GAME_VIEW_PADDING = 8
-
-        private val whiteColor = Color(0x88FFFFFF.toInt(), true)
-        private val grayColor = Color.decode("#272522")
-    }
+    class Config(
+        val borderFont: Font,
+        val symbolsVertical: List<Char>,
+        val symbolsHorizontal: List<Char>,
+        val gameViewPadding: Int,
+        val symbolsColor: Color,
+        val borderColor: Color,
+        val gameViewConfig: GameView.Config
+    )
 }
