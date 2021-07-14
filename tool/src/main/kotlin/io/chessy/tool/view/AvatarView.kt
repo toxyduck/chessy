@@ -9,14 +9,14 @@ import javax.imageio.ImageIO
 class AvatarView(
     override val x: Int = 0,
     override val y: Int = 0,
-    private val iconName: String,
+    private val url: URL?,
     private val size: Int
 ) : View {
     override val width: Int = size
     override val height: Int = size
 
     override fun draw(graphics: Graphics) {
-        val avatar = ImageIO.read(pathToAvatar())
+        val avatar = ImageIO.read(url ?: pathToAvatar())
         val avatarWidth = avatar.width
         val circled = BufferedImage(avatarWidth, avatarWidth, BufferedImage.TYPE_INT_ARGB)
         val g = circled.createGraphics()
@@ -26,11 +26,11 @@ class AvatarView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return AvatarView(x, y, iconName, size)
+        return AvatarView(x, y, url, size)
     }
 
     private fun pathToAvatar(): URL {
-        return PieceView::class.java.getResource("/$iconName")!!
+        return PieceView::class.java.getResource("/yan.jpg")!!
     }
 
 }

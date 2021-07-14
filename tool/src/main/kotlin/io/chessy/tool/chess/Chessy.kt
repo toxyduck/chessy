@@ -4,6 +4,8 @@ import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 import io.chessy.tool.FFmpegVideoMaker
 import io.chessy.tool.controller.Controller
+import io.chessy.tool.view.PieceView
+import java.net.URL
 
 
 class Chessy {
@@ -43,18 +45,24 @@ class Chessy {
                 )
             }
             val domainGame = Game(
-                whitePlayer,
-                blackPlayer,
-                where,
+                Player("Гарри Каспаров", 2812, pathToAvatar("kasparov.jpg")),
+                Player("Веселин Топалов", 2700, pathToAvatar("topalov.jpg")),
+                "Турнир Вейк-ан-Зее",
+                "Группа A",
+                "16 января 1999 года",
                 initialState,
                 domainMoves
             )
             videoMaker.startRecord()
-            val controller = Controller(initialState, domainMoves, 1080, 1920, 60) {
+            val controller = Controller(domainGame, domainMoves, 1080, 1920, 60) {
                 videoMaker.addFrame(it)
             }
             controller.startRender()
             videoMaker.endRecord()
         }
+    }
+
+    private fun pathToAvatar(name: String): URL {
+        return PieceView::class.java.getResource("/$name")!!
     }
 }

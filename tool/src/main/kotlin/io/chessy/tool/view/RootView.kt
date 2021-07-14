@@ -1,6 +1,6 @@
 package io.chessy.tool.view
 
-import io.chessy.tool.chess.Board
+import io.chessy.tool.chess.Game
 import java.awt.Color
 import java.awt.Graphics
 
@@ -10,7 +10,7 @@ class RootView(
     override val width: Int,
     override val height: Int,
     private val graphicsContext: Graphics,
-    private val board: Board,
+    private val game: Game,
     private val config: Config
 ) : ViewGroup<RootView.RootViewAction>() {
 
@@ -18,9 +18,7 @@ class RootView(
     private val blackDetailView: PlayerDetailsView
     private val whiteDetailView: PlayerDetailsView = PlayerDetailsView(
         width = width,
-        playerName = "Гарри Каспаров",
-        playerRating = 2812,
-        playerIconName = "kasparov.jpg",
+        player = game.whitePlayer,
         inverted = true,
         config = config.playerDetailsViewConfig,
         graphicsContext = graphicsContext
@@ -31,15 +29,13 @@ class RootView(
             x,
             whiteDetailView.y - width,
             width,
-            graphicsContext, board, config.borderedGameViewConfig
+            graphicsContext, game.initialState, config.borderedGameViewConfig
         )
         blackDetailView = PlayerDetailsView(
             x = x,
             y = gameView.y - whiteDetailView.height,
             width = width,
-            playerName =  "Веселин Топалов",
-            playerRating = 2700,
-            playerIconName = "topalov.jpg",
+            player = game.blackPlayer,
             inverted = false,
             config = config.playerDetailsViewConfig,
             graphicsContext = graphicsContext
@@ -47,9 +43,9 @@ class RootView(
         val eventView = EventDetailsView(
             x = x,
             width = width,
-            event = "Турнир Вейк-ан-Зее",
-            tournament = "Группа A",
-            date = "16 января 1999 года",
+            event = game.event,
+            tournament = game.tournament,
+            date = game.date,
             config = config.eventDetailsViewConfig,
             graphicsContext = graphicsContext
         ).moveWithSize { _, height ->
@@ -70,7 +66,7 @@ class RootView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return RootView(x, y, width, height, graphicsContext, board, config)
+        return RootView(x, y, width, height, graphicsContext, game, config)
     }
 
     override fun draw(graphics: Graphics) {

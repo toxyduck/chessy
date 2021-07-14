@@ -3,6 +3,7 @@ package io.chessy.tool.view
 import io.chessy.tool.ColorFactory
 import io.chessy.tool.animator.AlphaAnimator
 import io.chessy.tool.animator.ColorAnimator
+import io.chessy.tool.chess.Player
 import io.chessy.tool.interpolator.EaseInSineInterpolator
 import java.awt.Color
 import java.awt.Font
@@ -17,9 +18,7 @@ class PlayerDetailsView(
     override val x: Int = 0,
     override val y: Int = 0,
     override val width: Int,
-    private val playerName: String,
-    private val playerRating: Int,
-    private val playerIconName: String,
+    private val player: Player,
     private val inverted: Boolean,
     private val config: Config,
     private val graphicsContext: Graphics
@@ -38,7 +37,7 @@ class PlayerDetailsView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return PlayerDetailsView(x, y, width, playerName, playerRating, playerIconName, inverted, config, graphicsContext)
+        return PlayerDetailsView(x, y, width, player, inverted, config, graphicsContext)
     }
 
     override fun obtainAction(action: GameResult) {
@@ -72,18 +71,18 @@ class PlayerDetailsView(
 
     private fun initViews() {
         val avatarView = AvatarView(
-            iconName = playerIconName,
+            url = player.avatarUrl,
             size = config.avatarSize
         )
         val nameTextView = TextView(
             graphicsContext = graphicsContext,
-            text = playerName,
+            text = player.name,
             color = config.textColor,
             font = config.fontName
         )
         val ratingTextView = TextView(
             graphicsContext = graphicsContext,
-            text = playerRating.toString(),
+            text = player.rating.toString(),
             color = config.textColor,
             font = config.fontRating
         )

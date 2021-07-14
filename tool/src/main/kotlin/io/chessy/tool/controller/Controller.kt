@@ -1,7 +1,7 @@
 package io.chessy.tool.controller
 
 import io.chessy.tool.FontsLoader
-import io.chessy.tool.chess.Board
+import io.chessy.tool.chess.Game
 import io.chessy.tool.chess.Move
 import io.chessy.tool.rootViewConfig
 import io.chessy.tool.view.GameView
@@ -10,7 +10,7 @@ import io.chessy.tool.view.ViewGroup
 import java.awt.image.BufferedImage
 
 class Controller(
-    private val startBoard: Board,
+    private val game: Game,
     private val moves: List<Move>,
     private val width: Int,
     private val height: Int,
@@ -23,8 +23,8 @@ class Controller(
 
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
-        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard, rootViewConfig)
-        var currentBoard = startBoard
+        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, game, rootViewConfig)
+        var currentBoard = game.initialState
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
         gameView.renderAction()
