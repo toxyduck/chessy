@@ -27,3 +27,8 @@ inline fun View.moveWithSize(move: (width: Int, height: Int) -> Pair<Int, Int>):
     val (x, y) = move(width, height)
     return this.move(x, y)
 }
+
+inline fun <T : View> T.moveWithSizeCast(move: (width: Int, height: Int) -> Pair<Int, Int>): T {
+    val (x, y) = move(width, height)
+    return this.move(x, y) as T
+}

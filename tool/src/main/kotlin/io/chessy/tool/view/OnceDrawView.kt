@@ -3,7 +3,7 @@ package io.chessy.tool.view
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 
-class OnceDrawView(private val wrappedView: View) : View by wrappedView {
+class OnceDrawView(val wrappedView: View) : View by wrappedView {
 
     private val buffer by lazy { BufferedImage(wrappedView.width, wrappedView.height, BufferedImage.TYPE_INT_ARGB) }
     private var isRendered = false

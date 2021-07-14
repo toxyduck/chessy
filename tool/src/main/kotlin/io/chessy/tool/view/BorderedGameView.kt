@@ -45,7 +45,7 @@ class BorderedGameView(
                 boardSize - borderSize * 2,
                 board
             )
-        val border = BorderView(x + borderSize, gameView.y - borderSize, boardSize, boardSize, graphicsContext, borderViewConfig)
+        val border = BorderView(x, gameView.y - borderSize, boardSize, boardSize, graphicsContext, borderViewConfig)
         addChild(OnceDrawView(border))
         addChild(gameView)
     }
