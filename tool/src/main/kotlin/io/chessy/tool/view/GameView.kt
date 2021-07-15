@@ -14,7 +14,8 @@ class GameView(
     override val y: Int,
     override val width: Int,
     override val height: Int,
-    private val board: Board
+    private val board: Board,
+    private val config: Config
 ) : ViewGroup<GameView.GameViewAction>() {
 
     class GameViewAction(val currentBoard: Board, val move: Move)
@@ -22,8 +23,8 @@ class GameView(
     private val cellSize: Int = min(width, height) / 8
 
     init {
-        addChild(OnceDrawView(BoardView(x, y, width, height, whiteColor, blackColor)))
-        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, PIECE_PADDING, board)))
+        addChild(OnceDrawView(BoardView(x, y, width, height, config.whiteColor, config.blackColor)))
+        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, config.piecePadding, board)))
     }
 
     override fun obtainAction(action: GameViewAction) {
@@ -38,7 +39,7 @@ class GameView(
                         y + kingCell.y * cellSize,
                         cellSize,
                         cellSize,
-                        redColor
+                        config.specialColor
                     )
                 )
             )
@@ -54,12 +55,12 @@ class GameView(
     }
 
     override fun copy(x: Int, y: Int, width: Int, height: Int): View {
-        return GameView(x, y, width, height, board)
+        return GameView(x, y, width, height, board, config)
     }
 
     private fun move(currentBoard: Board, move: Move) {
         val staticPieces = currentBoard.filter(listOf(move.from))
-        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, PIECE_PADDING, staticPieces)))
+        addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, config.piecePadding, staticPieces)))
         val pieceView = PieceView(
             x + move.from.x * cellSize,
             y + move.from.y * cellSize,
@@ -69,8 +70,8 @@ class GameView(
         )
         val animator = MoveAnimator(
             interpolator,
-            PaddingView(pieceView, PIECE_PADDING),
-            MOVE_DURATION,
+            PaddingView(pieceView, config.piecePadding),
+            config.moveDuration,
             Point(x + move.to.x * cellSize, y + move.to.y * cellSize)
         )
         addChildOneAction(animator)
@@ -79,7 +80,7 @@ class GameView(
     private fun castleMove(currentBoard: Board, move: Move) {
         move.rookCastleMove()?.let { rookMove ->
             val staticPieces = currentBoard.filter(listOf(move.from, rookMove.from))
-            addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, PIECE_PADDING, staticPieces)))
+            addChildOneAction(OnceDrawView(StaticPiecesView(x, y, width, height, config.piecePadding, staticPieces)))
             val kingView = PieceView(
                 x + move.from.x * cellSize,
                 y + move.from.y * cellSize,
@@ -96,26 +97,29 @@ class GameView(
             )
             val rookAnimator = MoveAnimator(
                 interpolator,
-                PaddingView(rookView, PIECE_PADDING),
-                MOVE_DURATION,
+                PaddingView(rookView, config.piecePadding),
+                config.moveDuration,
                 Point(x + rookMove.to.x * cellSize, y + rookMove.to.y * cellSize)
             )
             val kingAnimator = MoveAnimator(
                 interpolator,
-                PaddingView(kingView, PIECE_PADDING),
-                MOVE_DURATION,
+                PaddingView(kingView, config.piecePadding),
+                config.moveDuration,
                 Point(x + move.to.x * cellSize, y + move.to.y * cellSize)
             )
             addChildesOneAction(kingAnimator, rookAnimator)
         }
     }
 
+    class Config(
+        val piecePadding: Int,
+        val moveDuration: Int,
+        val blackColor: Color,
+        val whiteColor: Color,
+        val specialColor: Color
+    )
+
     companion object {
-        private const val PIECE_PADDING = 24
-        private const val MOVE_DURATION = 500 / 16
-        private val blackColor = Color.decode("#B27B41")
-        private val whiteColor = Color.decode("#DEC496")
-        private val redColor = Color.decode("#B24341")
         private val interpolator = EaseInSineInterpolator
     }
 }

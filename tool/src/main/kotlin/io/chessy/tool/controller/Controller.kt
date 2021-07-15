@@ -1,19 +1,21 @@
 package io.chessy.tool.controller
 
 import io.chessy.tool.FontsLoader
-import io.chessy.tool.chess.Board
+import io.chessy.tool.chess.Game
 import io.chessy.tool.chess.Move
+import io.chessy.tool.rootViewConfig
 import io.chessy.tool.view.GameView
 import io.chessy.tool.view.RootView
 import io.chessy.tool.view.ViewGroup
 import java.awt.image.BufferedImage
 
 class Controller(
-    private val startBoard: Board,
+    private val game: Game,
     private val moves: List<Move>,
     private val width: Int,
     private val height: Int,
     private val fps: Int,
+    private val config: RootView.Config,
     private val frameListener: ((BufferedImage) -> Unit)
 ) {
     fun startRender() {
@@ -22,13 +24,12 @@ class Controller(
 
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
-        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, startBoard)
-        var currentBoard = startBoard
+        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, game, config)
+        var currentBoard = game.initialState
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
         gameView.renderAction()
         moves
-            .take(3)
             .forEach { move ->
                 println("Rendered move $move}")
                 gameView.produceAction(RootView.RootViewAction.GameViewMove(GameView.GameViewAction(currentBoard, move)))
@@ -36,7 +37,7 @@ class Controller(
                 currentBoard = currentBoard.mutate(move)
             }
         println("Render winner")
-        gameView.produceAction(RootView.RootViewAction.ShowWinner(RootView.GameResult.DRAW))
+        gameView.produceAction(RootView.RootViewAction.ShowWinner(game.result))
         gameView.renderAction()
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))
