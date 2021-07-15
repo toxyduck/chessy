@@ -30,7 +30,7 @@ class AvatarView(
     }
 
     private fun pathToAvatar(): URL {
-        return PieceView::class.java.getResource("/yan.jpg")!!
+        return PieceView::class.java.getResource("/user.png")!!
     }
 
 }
