@@ -15,6 +15,7 @@ class Controller(
     private val width: Int,
     private val height: Int,
     private val fps: Int,
+    private val config: RootView.Config,
     private val frameListener: ((BufferedImage) -> Unit)
 ) {
     fun startRender() {
@@ -23,7 +24,7 @@ class Controller(
 
         val graphicsContext = BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR).graphics
 
-        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, game, rootViewConfig)
+        val gameView: ViewGroup<RootView.RootViewAction> = RootView(0, 0, width, height, graphicsContext, game, config)
         var currentBoard = game.initialState
         println("Render pause")
         gameView.produceAction(RootView.RootViewAction.Pause(PAUSE_DURATION))

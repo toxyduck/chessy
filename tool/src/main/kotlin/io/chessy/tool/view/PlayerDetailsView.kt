@@ -127,16 +127,6 @@ class PlayerDetailsView(
     )
 
     companion object {
-//        private val FONT_FOR_NAME = Font("Gilroy-Bold", Font.PLAIN, 32)
-//        private val FONT_FOR_RATING = Font("Gilroy-Regular", Font.PLAIN, 32)
-//        private const val AVATAR_PADDING = 40
-//        private const val PADDING_VERTICAL = 48
-//        private const val PADDING_HORIZONTAL = 32
-//        private val textColor = Color.decode("#FFFFFF")
-//        private val ratingBackgroundColor = Color.decode("#212121")
-//        private val winnerColor = Color.decode("#BE8400")
-//        private val drawColor = Color.decode("#000000")
         private const val BACKGROUND_TAG = "background_tag"
-//        private const val WINNER_ANIMATION_DURATION = 256 / 16
     }
 }

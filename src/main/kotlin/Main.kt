@@ -1,11 +1,14 @@
 package io.chessy
 
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.Result
 import io.chessy.tool.chess.Chessy
+import io.chessy.tool.chess.Player
+import io.chessy.tool.rootViewConfig
+import java.net.URL
 
 fun main() {
-
+    fun pathToAvatar(name: String): URL {
+        return Chessy::class.java.getResource("/$name")!!
+    }
     val KASPAROV_TOPALOV = "[Event \"Hoogovens Group A\"]\n" +
             "[Site \"Wijk aan Zee NED\"]\n" +
             "[Date \"1999.01.20\"]\n" +
@@ -29,12 +32,26 @@ fun main() {
             "35. Qb2+ Kd1 36. Bf1 Rd2 37. Rd7 Rxd7 38. Bxc4 bxc4 39. Qxh8\n" +
             "Rd3 40. Qa8 c3 41. Qa4+ Ke1 42. f4 f5 43. Kc1 Rd2 44. Qa7 1-0"
 
+    Chessy(
+        width = 1080,
+        height = 1920,
+        fps = 60,
+        whitePlayer = Player("Гарри Каспаров", 2812, pathToAvatar("kasparov.jpg")),
+        blackPlayer = Player("Веселин Топалов", 2700, pathToAvatar("topalov.jpg")),
+        event = "Турнир Вейк-ан-Зее",
+        tournament = "Группа A",
+        date = "16 января 1999 года",
+        pgnString = KASPAROV_TOPALOV,
+        rootViewConfig
+    ).fromPgn("/tmp/out.mp4")
+
+
 //    val httpAsync = "https://lichess.org/game/export/RHxgDZ8q"
 //        .httpGet()
 //        .responseString { _, _, result ->
 //            when (result) {
 //                is Result.Success -> Chessy().fromPgn(result.get())
-                Chessy().fromPgn(KASPAROV_TOPALOV)
+//                Chessy().fromPgn(KASPAROV_TOPALOV)
 //                is Result.Failure -> {
 //                    val ex = result.getException()
 //                    println(ex)

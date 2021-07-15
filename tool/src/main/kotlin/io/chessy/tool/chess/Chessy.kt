@@ -5,14 +5,26 @@ import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 import io.chessy.tool.FFmpegVideoMaker
 import io.chessy.tool.controller.Controller
 import io.chessy.tool.view.PieceView
+import io.chessy.tool.view.RootView
 import java.net.URL
 
 
-class Chessy {
+class Chessy(
+    private val width: Int,
+    private val height: Int,
+    private val fps: Int,
+    private val whitePlayer: Player?,
+    private val blackPlayer: Player?,
+    private val event: String?,
+    private val tournament: String?,
+    private val date: String?,
+    private val pgnString: String,
+    private val config: RootView.Config
+) {
 
-    private val videoMaker = FFmpegVideoMaker(1080, 1920, 60)
+    fun fromPgn(outputFilePath: String) {
+        val videoMaker = FFmpegVideoMaker(width, height, fps, outputFilePath)
 
-    fun fromPgn(pgnString: String) {
         val pgn = PgnHolder("")
         pgn.loadPgn(pgnString)
         if (pgn.games.isNotEmpty()) {
@@ -27,9 +39,10 @@ class Chessy {
                 board.doMove(move)
                 mateMoves.add(Pair(board.isMated, board.isKingAttacked))
             }
-            val blackPlayer = game.blackPlayer.name
-            val whitePlayer = game.whitePlayer.name
+            val blackPlayerName = game.blackPlayer.name
+            val whitePlayerName = game.whitePlayer.name
             val where = game.round.event.name
+            val tournamentName = game.round.event.site
             val initialState = realBoard
             val domainMoves = moves.mapIndexed { ix, move ->
                 val from = Cell.fromNotation(move.from.value()) ?: throw Exception()
@@ -45,16 +58,16 @@ class Chessy {
                 )
             }
             val domainGame = Game(
-                Player("Гарри Каспаров", 2812, pathToAvatar("kasparov.jpg")),
-                Player("Веселин Топалов", 2700, pathToAvatar("topalov.jpg")),
-                "Турнир Вейк-ан-Зее",
-                "Группа A",
-                "16 января 1999 года",
+                whitePlayer = whitePlayer ?: Player(whitePlayerName, game.whitePlayer.elo, null),
+                blackPlayer = blackPlayer ?: Player(blackPlayerName, game.blackPlayer.elo, null),
+                event ?: where,
+                tournament ?: tournamentName,
+                date ?: game.date,
                 initialState,
                 domainMoves
             )
             videoMaker.startRecord()
-            val controller = Controller(domainGame, domainMoves, 1080, 1920, 60) {
+            val controller = Controller(domainGame, domainMoves, width, height, fps, config) {
                 videoMaker.addFrame(it)
             }
             controller.startRender()
@@ -62,7 +75,4 @@ class Chessy {
         }
     }
 
-    private fun pathToAvatar(name: String): URL {
-        return PieceView::class.java.getResource("/$name")!!
-    }
 }
