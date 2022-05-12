@@ -1,14 +1,11 @@
-package io.chessy.tool.chess
+package io.chessy.tool
 
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.game.GameResult
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
-import io.chessy.tool.FFmpegVideoMaker
+import io.chessy.tool.chess.*
 import io.chessy.tool.controller.Controller
-import io.chessy.tool.rootViewConfig
-import io.chessy.tool.view.PieceView
 import io.chessy.tool.view.RootView
-import java.net.URL
 
 
 class Chessy(
@@ -60,8 +57,16 @@ class Chessy(
             }
 
             val domainGame = Game(
-                whitePlayer = whitePlayer ?: Player(whitePlayerName, game.whitePlayer.elo, null),
-                blackPlayer = blackPlayer ?: Player(blackPlayerName, game.blackPlayer.elo, null),
+                whitePlayer = whitePlayer ?: Player(
+                    whitePlayerName,
+                    game.whitePlayer.elo,
+                    null
+                ),
+                blackPlayer = blackPlayer ?: Player(
+                    blackPlayerName,
+                    game.blackPlayer.elo,
+                    null
+                ),
                 event ?: where,
                 tournament ?: tournamentName,
                 date ?: game.date,
